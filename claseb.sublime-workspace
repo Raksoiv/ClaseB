@@ -7,6 +7,31 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/CarController.cs",
+			"settings":
+			{
+				"buffer_size": 8500,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
+			"settings":
+			{
+				"buffer_size": 5216,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/Nicolás/Downloads/simulacionautoywea.cs",
+			"settings":
+			{
+				"buffer_size": 16289,
+				"line_ending": "Windows",
+				"name": "/**"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -58,12 +83,13 @@
 	],
 	"file_history":
 	[
+		"/D/UTFSM/feria/DribyteWebsite/index.html",
 		"/D/ClaseB/claseb.sublime-project",
 		"/D/ClaseB/.gitignore"
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 34.0
 	},
 	"find_in_files":
 	{
@@ -77,6 +103,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"drivetrainFraction",
+			"inertia",
+			"getcomponent",
+			"throttle",
+			"acercando ",
+			"engineinertia",
+			"engineAngularAcceleration",
+			"throttle"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -94,14 +128,107 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/CarController.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8500,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7770,
+								7770
+							]
+						],
+						"settings":
+						{
+							"apply_syntax_touched": true,
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1739.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5216,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2745,
+								2745
+							]
+						],
+						"settings":
+						{
+							"apply_syntax_touched": true,
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1215.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/Nicolás/Downloads/simulacionautoywea.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16289,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11400,
+								11400
+							]
+						],
+						"settings":
+						{
+							"apply_syntax_touched": true,
+							"auto_name": "/**",
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2750.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -138,7 +265,7 @@
 	"project": "claseb.sublime-project",
 	"replace":
 	{
-		"height": 0.0
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":
