@@ -1637,7 +1637,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 188360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d09ca4dd9a6d40f4ea53728302e9e57b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a5cce73dba9d7d4195bab0211ab2ba0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   torqueCurve:
@@ -1650,18 +1650,18 @@ MonoBehaviour:
       tangentMode: 10
     - time: 364.413818
       value: 392.851013
-      inSlope: .967030406
-      outSlope: .967030406
+      inSlope: .826784968
+      outSlope: .826784968
       tangentMode: 0
-    - time: 5893.12842
-      value: 1076.94653
-      inSlope: -.280311108
-      outSlope: -.280311108
+    - time: 5900
+      value: 1000
+      inSlope: -.159977898
+      outSlope: -.159977898
       tangentMode: 0
     - time: 6000
-      value: 390
-      inSlope: -6.42777538
-      outSlope: -6.42777538
+      value: 0
+      inSlope: -10
+      outSlope: -10
       tangentMode: 10
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -1687,7 +1687,7 @@ MonoBehaviour:
   - {fileID: 456814}
   poweredWheels: 01010000
   isAutomatic: 1
-  maxRPM: 0
+  maxRPM: 6400
 --- !u!124 &12489126
 Behaviour:
   m_ObjectHideFlags: 1

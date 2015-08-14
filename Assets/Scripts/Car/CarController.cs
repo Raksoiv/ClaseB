@@ -39,9 +39,10 @@ public class CarController : MonoBehaviour {
 	void OnGUI() {
 		if (debugGUI) {
 			var speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
-			GUI.Box (new Rect (50, 50, 140, 55), 
-		         "Velocidad: " + speed.ToString ("F0") + "Km/h" + System.Environment.NewLine +
-				"Cambio: "
+			GUI.Box (new Rect (50, 50, 140, 55),
+			         "Velocidad : " + speed.ToString ("F0") + " Km/h" + System.Environment.NewLine +
+			         "RPM       : " + drivetrain.GetCurrentRPM().ToString() + System.Environment.NewLine +
+			         "Cambio    : " + drivetrain.GetCurrentGear().ToString() + System.Environment.NewLine
 			);
 			GUI.Label (new Rect (100, Screen.height - 50, 100, 400), "Test");
 		}

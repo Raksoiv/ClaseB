@@ -50,10 +50,15 @@ public class Drivetrain : MonoBehaviour {
 		//Calculando el torque con la ayuda de las formulas obtenidas desde:
 		//http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
 		
-		int wheelRPM = (int)(wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
+		float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
 		//Calcular RPM del motor cuando el embrague esta desactivado
 		//if (clutch != 0)
-		int engineRPM = minRPM + (int)(wheelRPM * finalGearRatio * gearRatios [currentGear]);
+		float engineRPM = wheelRPM * finalGearRatio * gearRatios [currentGear];
+
+		//test
+		if (engineRPM < minRPM)
+			engineRPM = minRPM;
+
 		//Calcular torque desde la curva.
 		float totalMotorTorque = torqueCurve.Evaluate (engineRPM) * gearRatios [currentGear] * finalGearRatio * throttle;
 		
@@ -61,7 +66,7 @@ public class Drivetrain : MonoBehaviour {
 		//pasar torque a las ruedas
 		for (int i = 0; i < 4; i++) {
 			if(poweredWheels[i]){
-				wheelColliders[i].motorTorque = totalMotorTorque;
+				wheelColliders[i].motorTorque = totalMotorTorque/2;
 			}
 		}
 		
@@ -76,7 +81,7 @@ public class Drivetrain : MonoBehaviour {
 				currentGear = (currentGear == 0?2:0);
 		}
 		
-		
+		RPM = (int)engineRPM;
 	}
 	
 	public void ShiftUp(){
@@ -90,5 +95,11 @@ public class Drivetrain : MonoBehaviour {
 	public void ShiftTo(int targetGear){
 		if (targetGear >= 0 && targetGear <= gearRatios.Length)
 			currentGear = targetGear;
+	}
+	public int GetCurrentGear(){
+		return currentGear;
+	}
+	public int GetCurrentRPM(){
+		return RPM;
 	}
 }
