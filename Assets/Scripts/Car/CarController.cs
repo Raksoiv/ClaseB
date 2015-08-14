@@ -6,6 +6,7 @@ using System.Collections;
 
 public class CarController : MonoBehaviour {
 	public Transform steeringWheel;
+	private bool debugGUI = false;
 
 	Drivetrain drivetrain;
 
@@ -20,12 +21,30 @@ public class CarController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.F12))
+			debugGUI = !debugGUI;
 	}
 	//Update for physics
 	void FixedUpdate(){
 		float steer = Input.GetAxis ("Horizontal");
 		float accelerate = Input.GetAxis ("Vertical");
 
-		drivetrain.Throttle = accelerate;
+		if (accelerate > 0)
+			drivetrain.Throttle = accelerate;
+		else if (accelerate < 0) {
+			
+		}
 	}
+
+	void OnGUI() {
+		if (debugGUI) {
+			var speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
+			GUI.Box (new Rect (50, 50, 140, 55), 
+		         "Velocidad: " + speed.ToString ("F0") + "Km/h" + System.Environment.NewLine +
+				"Cambio: "
+			);
+			GUI.Label (new Rect (100, Screen.height - 50, 100, 400), "Test");
+		}
+	}
+
 }
