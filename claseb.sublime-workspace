@@ -16,6 +16,14 @@
 			}
 		},
 		{
+			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
+			"settings":
+			{
+				"buffer_size": 791,
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
 			"settings":
 			{
@@ -83,6 +91,7 @@
 	],
 	"file_history":
 	[
+		"/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
 		"/D/UTFSM/feria/DribyteWebsite/index.html",
 		"/D/ClaseB/claseb.sublime-project",
 		"/D/ClaseB/.gitignore"
@@ -136,7 +145,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -152,8 +161,8 @@
 						"selection":
 						[
 							[
-								7698,
-								7703
+								6181,
+								6181
 							]
 						],
 						"settings":
@@ -163,14 +172,44 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2819.0,
+						"translation.y": 2144.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 791,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								791,
+								791
+							]
+						],
+						"settings":
+						{
+							"apply_syntax_touched": true,
+							"syntax": "Packages/C#/C#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
+					"buffer": 2,
 					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
 					"semi_transient": false,
 					"settings":
@@ -196,11 +235,11 @@
 						"translation.y": 765.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "/C/Users/Nicolás/Downloads/simulacionautoywea.cs",
 					"semi_transient": false,
 					"settings":
@@ -228,7 +267,7 @@
 						"translation.y": 3605.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
