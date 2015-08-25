@@ -15,9 +15,12 @@ public class Drivetrain : MonoBehaviour {
 	
 	public bool isAutomatic = true;
 	public int maxRPM; 
+
+	public int brakingForce;
 	
 	int currentGear = 1;
 	float throttle;
+	float brake;
 	int RPM;
 	
 	public float Throttle {
@@ -26,6 +29,15 @@ public class Drivetrain : MonoBehaviour {
 		}
 		set {
 			throttle = value;
+		}
+	}
+
+	public float Brake {
+		get {
+			return brake;
+		}
+		set {
+			brake = value;
 		}
 	}
 	
@@ -60,7 +72,7 @@ public class Drivetrain : MonoBehaviour {
 			engineRPM = minRPM;
 
 		//Calcular torque desde la curva.
-		float totalMotorTorque = torqueCurve.Evaluate (engineRPM) * gearRatios [currentGear] * finalGearRatio * throttle;
+		float totalMotorTorque = torqueCurve.Evaluate (engineRPM) * gearRatios [currentGear] * finalGearRatio * 0.7f * throttle;
 		
 		
 		//pasar torque a las ruedas
@@ -73,15 +85,27 @@ public class Drivetrain : MonoBehaviour {
 		// Cambios automaticos.
 		if (isAutomatic)
 		{
-			if (engineRPM >= maxRPM * (0.5f + 0.5f * throttle))
+			if (engineRPM >= maxRPM)
 				ShiftUp ();
-			else if (engineRPM <= maxRPM * (0.25f + 0.4f * throttle) && currentGear > 2)
+			else if (engineRPM <= minRPM * 1.1f && currentGear > 2)
 				ShiftDown ();
 			if (throttle < 0 && engineRPM <= minRPM)
 				currentGear = (currentGear == 0?2:0);
 		}
 		
 		RPM = (int)engineRPM;
+
+		if (brake > 0) {
+			foreach (WheelCollider wheel in wheelColliders) {
+				wheel.brakeTorque = brakingForce * brake / wheelColliders.Length;
+			}
+			Debug.Log (brake);
+		} else {
+			foreach (WheelCollider wheel in wheelColliders){
+				wheel.brakeTorque = 0;
+			}
+		}
+
 	}
 	
 	public void ShiftUp(){

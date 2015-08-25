@@ -968,7 +968,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 188360}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .263999999, z: 0}
+  m_LocalPosition: {x: 0, y: .196999997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 477196}
@@ -1499,7 +1499,7 @@ Rigidbody:
   m_AngularDrag: .0500000007
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!65 &6502900
@@ -1643,37 +1643,57 @@ MonoBehaviour:
   torqueCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
+    - time: 999
       value: 0
-      inSlope: 1.07803547
-      outSlope: 1.07803547
+      inSlope: 71
+      outSlope: 71
       tangentMode: 10
-    - time: 364.413818
-      value: 392.851013
-      inSlope: .826784968
-      outSlope: .826784968
+    - time: 1000
+      value: 71
+      inSlope: .228222087
+      outSlope: .0934343934
+      tangentMode: 1
+    - time: 1452.88525
+      value: 100.476265
+      inSlope: .0651064739
+      outSlope: .0651064739
       tangentMode: 0
-    - time: 5900
-      value: 1000
-      inSlope: -.159977898
-      outSlope: -.159977898
+    - time: 2081.52979
+      value: 125
+      inSlope: .0255882442
+      outSlope: .0255882442
       tangentMode: 0
-    - time: 6000
+    - time: 4000
+      value: 150
+      inSlope: .00401118305
+      outSlope: .00401118305
+      tangentMode: 0
+    - time: 5012.32471
+      value: 140.514801
+      inSlope: -.0135588711
+      outSlope: -.0135588711
+      tangentMode: 0
+    - time: 6445.83008
+      value: 97
+      inSlope: -.0484770499
+      outSlope: -.0484770499
+      tangentMode: 0
+    - time: 6500.1001
       value: 0
-      inSlope: -10
-      outSlope: -10
+      inSlope: -1.78735888
+      outSlope: -1.78735888
       tangentMode: 10
     m_PreInfinity: 2
     m_PostInfinity: 2
   gearRatios:
-  - -2.9000001
-  - 2.66000009
-  - 1.77999997
+  - -3.72399998
+  - 3.70000005
+  - 1.94700003
   - 1.29999995
-  - 1
-  - .74000001
-  - .5
-  finalGearRatio: 3.42000008
+  - 1.02900004
+  - .837000012
+  - .680000007
+  finalGearRatio: 4.10500002
   minRPM: 1000
   wheelColliders:
   - {fileID: 14660440}
@@ -1688,6 +1708,7 @@ MonoBehaviour:
   poweredWheels: 01010000
   isAutomatic: 1
   maxRPM: 6400
+  brakingForce: 1000
 --- !u!124 &12489126
 Behaviour:
   m_ObjectHideFlags: 1

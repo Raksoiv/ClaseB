@@ -26,25 +26,22 @@ public class CarController : MonoBehaviour {
 	}
 	//Update for physics
 	void FixedUpdate(){
+		//Input de teclado
 		float steer = Input.GetAxis ("Horizontal");
 		float accelerate = Input.GetAxis ("Vertical");
 
-		if (accelerate > 0)
-			drivetrain.Throttle = accelerate;
-		else if (accelerate < 0) {
-			
-		}
+		drivetrain.Throttle = accelerate;
+		drivetrain.Brake = accelerate * -1;
 	}
 
 	void OnGUI() {
 		if (debugGUI) {
 			var speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
 			GUI.Box (new Rect (50, 50, 140, 55),
-			         "Velocidad : " + speed.ToString ("F0") + " Km/h" + System.Environment.NewLine +
-			         "RPM       : " + drivetrain.GetCurrentRPM().ToString() + System.Environment.NewLine +
-			         "Cambio    : " + drivetrain.GetCurrentGear().ToString() + System.Environment.NewLine
+			         "Velocidad: " + speed.ToString ("F0") + " Km/h" + System.Environment.NewLine +
+			         "RPM: " + drivetrain.GetCurrentRPM().ToString() + System.Environment.NewLine +
+			         "Cambio: " + drivetrain.GetCurrentGear().ToString() + System.Environment.NewLine
 			);
-			GUI.Label (new Rect (100, Screen.height - 50, 100, 400), "Test");
 		}
 	}
 
