@@ -21,6 +21,7 @@ public class CarController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		steeringWheel.transform.localRotation = Quaternion.Euler (0, 0, -Input.GetAxis ("Horizontal")*90);
 		if (Input.GetKeyDown (KeyCode.F12))
 			debugGUI = !debugGUI;
 	}
@@ -32,6 +33,11 @@ public class CarController : MonoBehaviour {
 
 		drivetrain.Throttle = accelerate;
 		drivetrain.Brake = accelerate * -1;
+
+		float finalAngle = steer * 45f;
+	
+		drivetrain.wheelColliders [0].steerAngle = finalAngle;
+		drivetrain.wheelColliders [1].steerAngle = finalAngle;
 	}
 
 	void OnGUI() {

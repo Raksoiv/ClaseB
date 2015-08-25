@@ -40,7 +40,7 @@ public class Drivetrain : MonoBehaviour {
 			brake = value;
 		}
 	}
-	
+
 	void UpdateWheelMeshesPositions(){
 		for (int i = 0; i < 4; i++) {
 			Quaternion quat;
@@ -95,6 +95,7 @@ public class Drivetrain : MonoBehaviour {
 		
 		RPM = (int)engineRPM;
 
+		//Aplicar Frenos
 		if (brake > 0) {
 			foreach (WheelCollider wheel in wheelColliders) {
 				wheel.brakeTorque = brakingForce * brake / wheelColliders.Length;
@@ -105,7 +106,6 @@ public class Drivetrain : MonoBehaviour {
 				wheel.brakeTorque = 0;
 			}
 		}
-
 	}
 	
 	public void ShiftUp(){

@@ -557,9 +557,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 478552}
   - 54: {fileID: 5434742}
-  - 114: {fileID: 11432792}
   - 114: {fileID: 11470006}
   - 114: {fileID: 11434766}
+  - 114: {fileID: 11407850}
+  - 114: {fileID: 11475450}
   m_Layer: 0
   m_Name: Car
   m_TagString: Untagged
@@ -1593,30 +1594,20 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &11432792
+--- !u!114 &11407850
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 188360}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 185e9ea8977e52f4182853c60adfa8b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 664dfe4c1746bc245915a7dfddb7eb67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxTorque: 50
-  centerOfMass: {fileID: 0}
-  steeringWheel: {fileID: 0}
-  wheelColliders:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  tireMeshes:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  WheelL: {fileID: 14616682}
+  WheelR: {fileID: 14660440}
+  AntiRoll: 5000
 --- !u!114 &11434766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1628,7 +1619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65769aade20a8664fb88c056e9512fe1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steeringWheel: {fileID: 0}
+  steeringWheel: {fileID: 411108}
 --- !u!114 &11470006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1709,6 +1700,20 @@ MonoBehaviour:
   isAutomatic: 1
   maxRPM: 6400
   brakingForce: 1000
+--- !u!114 &11475450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 188360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 664dfe4c1746bc245915a7dfddb7eb67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WheelL: {fileID: 14615136}
+  WheelR: {fileID: 14667462}
+  AntiRoll: 5000
 --- !u!124 &12489126
 Behaviour:
   m_ObjectHideFlags: 1
