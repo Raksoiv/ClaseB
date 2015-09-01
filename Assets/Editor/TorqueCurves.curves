@@ -58,3 +58,49 @@ MonoBehaviour:
         tangentMode: 10
       m_PreInfinity: 2
       m_PostInfinity: 2
+  - m_Name: 
+    m_Curve:
+      serializedVersion: 2
+      m_Curve:
+      - time: 999
+        value: 0
+        inSlope: 71
+        outSlope: 71
+        tangentMode: 10
+      - time: 1000
+        value: 71
+        inSlope: .228222087
+        outSlope: .0934343934
+        tangentMode: 1
+      - time: 1452.88525
+        value: 100.476265
+        inSlope: .0651064739
+        outSlope: .0651064739
+        tangentMode: 0
+      - time: 2081.52979
+        value: 125
+        inSlope: .0255882442
+        outSlope: .0255882442
+        tangentMode: 0
+      - time: 4000
+        value: 150
+        inSlope: .00401118305
+        outSlope: .00401118305
+        tangentMode: 0
+      - time: 5012.32471
+        value: 140.514801
+        inSlope: -.0135588711
+        outSlope: -.0135588711
+        tangentMode: 0
+      - time: 6445.83008
+        value: 97
+        inSlope: -.0484770499
+        outSlope: -.0484770499
+        tangentMode: 0
+      - time: 6500.1001
+        value: 0
+        inSlope: -1.78735888
+        outSlope: -1.78735888
+        tangentMode: 10
+      m_PreInfinity: 2
+      m_PostInfinity: 2

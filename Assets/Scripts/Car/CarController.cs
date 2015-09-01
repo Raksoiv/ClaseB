@@ -8,7 +8,7 @@ public class CarController : MonoBehaviour {
 	public Transform steeringWheel;
 	private bool debugGUI = false;
 
-	Drivetrain drivetrain;
+	Powertrain drivetrain;
 
 	void UpdateSteeringwheelRotation(float deg){
 	//	steeringWheel.transform.localRotation.eulerAngles.z = deg;
@@ -16,7 +16,7 @@ public class CarController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		drivetrain = GetComponent<Drivetrain> ();
+		drivetrain = GetComponent<Powertrain> ();
 	}
 	
 	// Update is called once per frame
@@ -36,8 +36,7 @@ public class CarController : MonoBehaviour {
 
 		float finalAngle = steer * 45f;
 	
-		drivetrain.wheelColliders [0].steerAngle = finalAngle;
-		drivetrain.wheelColliders [1].steerAngle = finalAngle;
+		drivetrain.Steering = finalAngle;
 	}
 
 	void OnGUI() {
