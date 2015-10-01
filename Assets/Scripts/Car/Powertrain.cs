@@ -90,10 +90,7 @@ public class Powertrain : MonoBehaviour {
 		wheelColliders[0].motorTorque = totalMotorTorque/2;
 		wheelColliders[1].motorTorque = totalMotorTorque/2;
 
-		//aplicar rotacion
-		wheelColliders [0].steerAngle = steering; 
-		wheelColliders [1].steerAngle = steering; 
-
+		
 		// Cambios automaticos.
 		if (isAutomatic)
 		{
