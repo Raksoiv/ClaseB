@@ -112,7 +112,7 @@ public class Powertrain : MonoBehaviour {
 			foreach (WheelCollider wheel in wheelColliders) {
 				wheel.brakeTorque = brakingForce * brake / wheelColliders.Length;
 			}
-			Debug.Log (brake);
+			//Debug.Log (brake);
 		} else {
 			foreach (WheelCollider wheel in wheelColliders){
 				wheel.brakeTorque = 0;

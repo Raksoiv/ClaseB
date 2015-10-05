@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 709d9e04e9a36e2469f7f74d95d7d1ad
+timeCreated: 1443969651
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - rectaV: {fileID: 144696, guid: de3d8509b00e1ed4899c126aa093fd0d, type: 2}
+  - rectaH: {fileID: 186890, guid: ae8c96797be4424438a0ad289c4d5d59, type: 2}
+  - Curva1: {fileID: 197270, guid: 8b068e4c7226d7e4c819703d7ad3a0b6, type: 2}
+  - Curva2: {fileID: 189158, guid: 7999b0544e0d68141a0f4971073e6a1a, type: 2}
+  - Curva3: {fileID: 188882, guid: 447bac9637d008c44a24e6e52c750737, type: 2}
+  - Curva4: {fileID: 191932, guid: 461eaaedebb0ddc4792fd12ee0b50d5a, type: 2}
+  - Cruce: {fileID: 109640, guid: 6ca8b8f121560ac438562a28365fc2d3, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
