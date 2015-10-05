@@ -196,7 +196,7 @@ public class Generacion : MonoBehaviour {
             }
 
             //Compruba y reinicia la lectura de la generacion de terreno
-            if (contador >= generacion.Length)
+            if (contador + 1 >= generacion.Length)
             {
                 contador = 0;
                 generacionTerminada = true;
