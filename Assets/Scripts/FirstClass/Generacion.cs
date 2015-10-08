@@ -32,41 +32,78 @@ public class Generacion : MonoBehaviour {
 
     private int[] generacion;
     private int[] dirContrarias;
-    private int[] cuervosIzquierdo;
-    private int[] cuervosDerecho;
+    private int[] curvosIzquierdo;
+    private int[] curvosDerecho;
     private int[,] terrenos;
     private GameObject[] lectura;
 
     private int posicionX;
     private int posicionZ;
     private int contador;
+    private int direccionAnterior;
     private int direccionActual;
+    private int terrenoAnterior;
     private int terrenoActual;
+    private int posicionBoton;
     private bool generacionTerminada;
+    private bool cambioTerreno;
 
 	// Use this for initialization
 	void Start () {
         direccionActual = 0;
+        direccionAnterior = 0;
         terrenoActual = 5;
+        terrenoAnterior = 5;
         posicionX = 0;
         posicionZ = 0;
         contador = 0;
         generacionTerminada = false;
+        cambioTerreno = false;
 
         lectura = new GameObject[10];
         terrenos = new int[7, 4] { { 1, 1, 1, 1 }, { 0, 1, 0, 1 }, { 0, 1, 1, 0 }, { 1, 0, 0, 1 }, { 1, 0, 1, 0 }, { 1, 1, 0, 0 }, { 0, 0, 1, 1 } };
         dirContrarias = new int[4] { 1, 0, 3, 2 };
-        cuervosIzquierdo = new int[4] { 3, 2, 0, 1 };
-        cuervosDerecho = new int[4] { 2, 3, 1, 0 };
+        curvosIzquierdo = new int[4] { 3, 2, 0, 1 };
+        curvosDerecho = new int[4] { 2, 3, 1, 0 };
 
         //Arreglo de acciones para generacion de Caminos
         LeerArchivoConfiguracion(ArchivoConfiguracion);
 	}
+
+    void OnTriggerEnter(Collider other)
+    {
+        cambioTerreno = false;
+        if (direccionActual != 1 && other.transform.position.z >= posicionZ * 500 + 400)
+        {
+            direccionActual = 0;
+            cambioTerreno = true;
+        }
+        else if (direccionActual != 2 && other.transform.position.x >= posicionX * 500 + 400)
+        {
+            direccionActual = 3;
+            cambioTerreno = true;
+        }
+        else if (direccionActual != 0 && other.transform.position.z <= posicionZ * 500 + 100)
+        {
+            direccionActual = 1;
+            cambioTerreno = true;
+        }
+        else if (direccionActual != 3 && other.transform.position.x <= posicionX * 500 + 100)
+        {
+            direccionActual = 2;
+            cambioTerreno = true;
+        }
+        else
+        {
+            cambioTerreno = false;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
+        /*
         bool cambioTerreno = false;
-
+        
         //Determina la direccion a la cual se dirige el automovil
         if (direccionActual != 1 && transform.position.z >= posicionZ * 500 + 400)
         {
@@ -92,9 +129,13 @@ public class Generacion : MonoBehaviour {
         {
             cambioTerreno = false;
         }
+        */
 
         if (cambioTerreno && !generacionTerminada)
         {
+            terrenoAnterior = terrenoActual;
+            direccionAnterior = direccionActual;
+
             //Toma una desicion dependiendo de la accion de conducción deseada (recto, virar, curva)
             switch (generacion[contador])
             {
@@ -116,23 +157,19 @@ public class Generacion : MonoBehaviour {
                     break;
                 case 4:
                     for (int i = 1; i <= 4; i++)
-                    {
-                        if (terrenos[i, dirContrarias[direccionActual]] == 1 && terrenos[i, cuervosDerecho[dirContrarias[direccionActual]]] == 1)
+                        if (terrenos[i, dirContrarias[direccionActual]] == 1 && terrenos[i, curvosDerecho[dirContrarias[direccionActual]]] == 1)
                         {
                             terrenoActual = i;
                             break;
                         }
-                    }
                     break;
                 case 5:
                     for (int i = 1; i <= 4; i++)
-                    {
-                        if (terrenos[i, dirContrarias[direccionActual]] == 1 && terrenos[i, cuervosIzquierdo[dirContrarias[direccionActual]]] == 1)
+                        if (terrenos[i, dirContrarias[direccionActual]] == 1 && terrenos[i, curvosIzquierdo[dirContrarias[direccionActual]]] == 1)
                         {
                             terrenoActual = i;
                             break;
                         }
-                    }
                     break;
                 default:
                     print("Error: Accion no identificada en la lista Generacion");
@@ -157,6 +194,21 @@ public class Generacion : MonoBehaviour {
                 default:
                     print("Error: Direccion no identificada");
                     break;
+            }
+
+            //Si en un cruce no se dobla donde debe volvera a aparecer otro cruce
+            if (terrenoAnterior == 0)
+            {
+                if (generacion[contador - 1] == 2 && curvosDerecho[direccionAnterior] != direccionActual){
+                    terrenoActual = terrenoAnterior;
+                    contador -= 1;
+                }
+
+                else if (generacion[contador - 1] == 3 && curvosIzquierdo[direccionAnterior] != direccionActual)
+                {
+                    terrenoActual = terrenoAnterior;
+                    contador -= 1;
+                }
             }
 
             //Genera el terreno instanciando el Prefab adecuado
