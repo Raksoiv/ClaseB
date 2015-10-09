@@ -105,36 +105,32 @@ public class Generacion : MonoBehaviour {
         bool cambioTerreno = false;
         
         //Determina la direccion a la cual se dirige el automovil
-        if (direccionActual != 1 && transform.position.z >= posicionZ * 500 + 400)
-        {
+        if (direccionActual != 1 && transform.position.z >= posicionZ * 500 + 400){
             direccionActual = 0;
             cambioTerreno = true;
         }
-        else if (direccionActual != 2 && transform.position.x >= posicionX * 500 + 400)
-        {
+        else if (direccionActual != 2 && transform.position.x >= posicionX * 500 + 400){
             direccionActual = 3;
             cambioTerreno = true;
         }
-        else if (direccionActual != 0 && transform.position.z <= posicionZ * 500 + 100)
-        {
+        else if (direccionActual != 0 && transform.position.z <= posicionZ * 500 + 100){
             direccionActual = 1;
             cambioTerreno = true;
         }
-        else if (direccionActual != 3 && transform.position.x <= posicionX * 500 + 100)
-        {
+        else if (direccionActual != 3 && transform.position.x <= posicionX * 500 + 100){
             direccionActual = 2;
             cambioTerreno = true;
         }
-        else
-        {
+        else{
             cambioTerreno = false;
         }
         */
 
         if (cambioTerreno && !generacionTerminada)
         {
+			int direccionSubAnt = direccionAnterior;
+			direccionAnterior = direccionActual;
             terrenoAnterior = terrenoActual;
-            direccionAnterior = direccionActual;
 
             //Toma una desicion dependiendo de la accion de conducción deseada (recto, virar, curva)
             switch (generacion[contador])
@@ -199,12 +195,12 @@ public class Generacion : MonoBehaviour {
             //Si en un cruce no se dobla donde debe volvera a aparecer otro cruce
             if (terrenoAnterior == 0)
             {
-                if (generacion[contador - 1] == 2 && curvosDerecho[direccionAnterior] != direccionActual){
+				if (generacion[contador - 1] == 2 && curvosDerecho[dirContrarias[direccionSubAnt]] != direccionActual){
                     terrenoActual = terrenoAnterior;
                     contador -= 1;
                 }
 
-                else if (generacion[contador - 1] == 3 && curvosIzquierdo[direccionAnterior] != direccionActual)
+				else if (generacion[contador - 1] == 3 && curvosIzquierdo[direccionSubAnt] != direccionActual)
                 {
                     terrenoActual = terrenoAnterior;
                     contador -= 1;
