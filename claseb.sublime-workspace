@@ -8,36 +8,30 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/CarController.cs",
+			"file": "Assets/Scripts/Car/AntiRollBar.cs",
 			"settings":
 			{
-				"buffer_size": 8500,
-				"line_ending": "Unix"
+				"buffer_size": 985,
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
+			"file": "/C/Users/mhobbit/AppData/Roaming/Sublime Text 3/Packages/User/C#.sublime-settings",
 			"settings":
 			{
-				"buffer_size": 791,
-				"line_ending": "Unix"
+				"buffer_size": 162,
+				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
+			"contents": "Package Control Messages\n========================\n\nOmniSharp\n---------\n\n  Welcome to OmniSharpSublime!\n  \n  You can now edit C#, build your projects, run your tests, get intellisense, refactor like a pro, be shown syntax errors and lots more!\n  \n  For more information see the README and Wiki here: https://github.com/OmniSharp/omnisharp-sublime\n",
 			"settings":
 			{
-				"buffer_size": 5216,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/C/Users/Nicolás/Downloads/simulacionautoywea.cs",
-			"settings":
-			{
-				"buffer_size": 16289,
+				"buffer_size": 346,
 				"line_ending": "Windows",
-				"name": "/**"
+				"name": "Package Control Messages",
+				"read_only": true,
+				"scratch": true
 			}
 		}
 	],
@@ -48,13 +42,17 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 392.0,
-		"last_filter": "packag",
+		"height": 104.0,
+		"last_filter": "install",
 		"selected_items":
 		[
 			[
-				"packag",
+				"install",
 				"Package Control: Install Package"
+			],
+			[
+				"packag",
+				"Package Control: Remove Package"
 			],
 			[
 				"packa",
@@ -87,18 +85,23 @@
 	},
 	"expanded_folders":
 	[
-		"/D/ClaseB"
+		"/D/ClaseB",
+		"/D/ClaseB/Assets"
 	],
 	"file_history":
 	[
-		"/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
-		"/D/UTFSM/feria/DribyteWebsite/index.html",
 		"/D/ClaseB/claseb.sublime-project",
+		"/C/Users/NICOLS~1/AppData/Local/Temp/7zOF68F.tmp/RopeController.cs",
+		"/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
+		"/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
+		"/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/CarController.cs",
+		"/C/Users/Nicolás/Downloads/simulacionautoywea.cs",
+		"/D/UTFSM/feria/DribyteWebsite/index.html",
 		"/D/ClaseB/.gitignore"
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -145,59 +148,28 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/CarController.cs",
-					"semi_transient": false,
+					"file": "Assets/Scripts/Car/AntiRollBar.cs",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 8500,
+						"buffer_size": 985,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6181,
-								6181
+								985,
+								985
 							]
 						],
 						"settings":
 						{
-							"apply_syntax_touched": true,
-							"syntax": "Packages/C#/C#.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2144.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/AntiRollBar.cs",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 791,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								791,
-								791
-							]
-						],
-						"settings":
-						{
-							"apply_syntax_touched": true,
 							"syntax": "Packages/C#/C#.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
@@ -209,65 +181,61 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "/C/Users/Nicolás/Downloads/DigitalCult GT 1.2.0/DigitalCult GT/Assets/Scripts/ScriptsCar/Drivetrain.cs",
+					"buffer": 1,
+					"file": "/C/Users/mhobbit/AppData/Roaming/Sublime Text 3/Packages/User/C#.sublime-settings",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5216,
+						"buffer_size": 162,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1952,
-								1952
+								162,
+								162
 							]
 						],
 						"settings":
 						{
-							"apply_syntax_touched": true,
-							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 765.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "/C/Users/Nicolás/Downloads/simulacionautoywea.cs",
+					"buffer": 2,
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16289,
+						"buffer_size": 346,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10670,
-								10670
+								346,
+								346
 							]
 						],
 						"settings":
 						{
-							"apply_syntax_touched": true,
-							"auto_name": "/**",
-							"syntax": "Packages/C#/C#.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"auto_indent": false,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_width": 2,
+							"word_wrap": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3605.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -304,6 +272,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
 	"output.find_results":
 	{
 		"height": 0.0
