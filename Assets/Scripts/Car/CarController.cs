@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 //Este componente controla el input del auto.
 //Requiere componente Drivetrain en el actor.
