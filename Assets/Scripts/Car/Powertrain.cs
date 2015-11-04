@@ -224,7 +224,6 @@ public class Powertrain : MonoBehaviour {
 			currentGear--;
 	}
 	public void ShiftTo(int targetGear){
-		//currentGear = targetGear;
 		if (clutch < 0.2) {
 			if (targetGear >= 0 && targetGear <= gearRatios.Length)
 				currentGear = targetGear;
