@@ -3,9 +3,11 @@ using System.Collections;
 
 public class OculusController : MonoBehaviour {
 
+	public bool ActivateOculus;
+
 	// Use this for initialization
 	void Start () {
-		UnityEngine.VR.VRSettings.enabled = true;
+		UnityEngine.VR.VRSettings.enabled = ActivateOculus;
 		UnityEngine.VR.InputTracking.Recenter();
 	}
 	
