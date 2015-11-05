@@ -4,6 +4,8 @@
 //Requiere componente Drivetrain en el actor.
 
 public class CarController : MonoBehaviour {
+	[SerializeField]private bool isAutomatic = false;							
+
 	public Transform steeringWheel;
 	private bool debugGUI = true;
 
@@ -19,7 +21,6 @@ public class CarController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		powertrain = GetComponent<Powertrain> ();
-		LogitechGSDK.LogiSteeringInitialize(false);
 	}
 	
 	// Update is called once per frame
@@ -33,13 +34,8 @@ public class CarController : MonoBehaviour {
 
 		powertrain.Throttle = Mathf.Clamp01(combinedInput);
 		powertrain.Brake = - Mathf.Clamp (combinedInput, -1, 0);
-		//powertrain.Clutch = (clutch + 1)/2f;
+		powertrain.Clutch = (clutch + 1)/2f;
 
-		if (Input.GetKey ("e")) {
-			powertrain.Clutch = 0;
-			Debug.Log("esto funciona");
-		}
-		
 		float finalAngle = steer * 45f;
 		
 		powertrain.Steering = finalAngle;
@@ -66,7 +62,7 @@ public class CarController : MonoBehaviour {
 	void OnGUI() {
 		if (debugGUI) {
 			float speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
-			string rpm = powertrain.GetCurrentRPM().ToString();
+			string rpm = Powertrain.GetCurrentRPM().ToString();
 			string gear = (powertrain.GetCurrentGear() == 7)? "R" : powertrain.GetCurrentGear().ToString();
 			GUI.Box (new Rect (50, 50, 140, 55),
 			         "Speed : " + speed.ToString ("F0") + " Km/h" + System.Environment.NewLine +
@@ -74,10 +70,6 @@ public class CarController : MonoBehaviour {
 			         "Gear  : " + gear + System.Environment.NewLine
 			);
 		}
-	}
-
-	void Stop(){
-		LogitechGSDK.LogiSteeringShutdown();
 	}
 
 }

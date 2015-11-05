@@ -14,7 +14,6 @@ public class Powertrain : MonoBehaviour {
 	[SerializeField]private WheelCollider[] wheelColliders = new WheelCollider[4];  //WheelColliders: Delantera, Delantera, Trasera, Trasera
 	[SerializeField]private Transform[] tireMeshes = new Transform[4];              //Meshes de las ruedas (en el mismo orden que los WheelColliders)
 
-	[SerializeField]private bool isAutomatic = false;							
 
 	[SerializeField]private int brakingForce;										//Fuerza de Frenado (en Newtons)
 	[SerializeField]private int engineInertia;										//Inercia del motor ocupada para acelerar en neutro.
@@ -26,7 +25,9 @@ public class Powertrain : MonoBehaviour {
 	float brake;
 	float clutch;
 	float steering;
-	float engineRPM;
+
+
+	static float engineRPM;
 
 	public float Throttle {
 		get {
@@ -235,7 +236,14 @@ public class Powertrain : MonoBehaviour {
 	public int GetCurrentGear(){
 		return currentGear;
 	}
-	public int GetCurrentRPM(){
-		return (int)engineRPM;
+	static public int GetCurrentRPM(){
+		int rpm = new int();
+		rpm = (int)engineRPM;
+		return rpm;
+	}
+	static public int GetCurrentSpeed(){
+		float speed = new float (); 
+		speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
+		return speed;
 	}
 }
