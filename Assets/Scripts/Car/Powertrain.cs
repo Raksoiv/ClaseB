@@ -26,7 +26,7 @@ public class Powertrain : MonoBehaviour {
 	float clutch;
 	float steering;
 
-
+	static Rigidbody rigidbody;
 	static float engineRPM;
 
 	public float Throttle {
@@ -63,6 +63,10 @@ public class Powertrain : MonoBehaviour {
 		set {
 			steering = value;
 		}
+	}
+
+	void Start(){
+		rigidbody = GetComponent<Rigidbody> ();
 	}
 
 	void UpdateWheelMeshesPositions(){
@@ -242,8 +246,6 @@ public class Powertrain : MonoBehaviour {
 		return rpm;
 	}
 	static public int GetCurrentSpeed(){
-		float speed = new float (); 
-		speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
-		return speed;
+		return Mathf.FloorToInt(rigidbody.velocity.magnitude * 3.6f);
 	}
 }
