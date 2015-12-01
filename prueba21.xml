@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--Starbuzz Customer Loyalty Data-->
+<Contacts>
+  <Contacto1>
+    <Name>Patrick Hines</Name>
+    <Phone>206-555-0144</Phone>
+    <Address>
+      <Street1>123 Main St</Street1>
+      <City>Mercer Island</City>
+      <State>WA</State>
+      <Postal>68042</Postal>
+    </Address>
+  </Contacto1>
+  <Contacto2>
+    <Name>Patrick Hines</Name>
+    <Phone>206-555-0144</Phone>
+    <Address>
+      <Street1>123 Main St</Street1>
+      <City>Mercer Island</City>
+      <State>WA</State>
+      <Postal>68042</Postal>
+    </Address>
+  </Contacto2>
+  <Contacto3>
+    <Name>Patrick Hines</Name>
+    <Phone2>206-555-0144</Phone2>
+    <Phone>206-555-0144</Phone>
+    <Address>
+      <Street1>123 Main St</Street1>
+      <City>Mercer Island</City>
+      <State>WA</State>
+      <Postal>68042</Postal>
+    </Address>
+  </Contacto3>
+</Contacts>
