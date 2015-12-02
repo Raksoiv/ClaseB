@@ -1,10 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.Linq;
-using System.Xml.Linq;
-
 using System;
 using System.IO;
 using System.Net;
@@ -13,13 +8,15 @@ using System.Text;
 public static class API {
 
     private static bool sesionIniciada = false;
+    private static bool procesandoFinalizar = false;
     private static string rutActual = string.Empty;
-    private static int tiempoTotal = 0;
+    private static int contadorEstadistica = 0;
 
     private static List<int> Velocidad = new List<int>();
     private static List<int> TiemposVelocidad = new List<int>();
 
     private static List<int> TiemposFueraCarril = new List<int>();
+    private static List<int> TiemposRegistroCarril = new List<int>();
 
     private static List<bool> UtilizaLuces = new List<bool>();
     private static List<int> TerrenoLuces = new List<int>();
@@ -34,7 +31,7 @@ public static class API {
     //Iniciar Sesion para el registro de estadisticas
     public static bool startSesion(string RUT)
     {
-        if (sesionIniciada)
+        if (sesionIniciada || procesandoFinalizar)
         {
             return false;
         }
@@ -42,8 +39,8 @@ public static class API {
         {
             sesionIniciada = true;
             rutActual = RUT;
+            contadorEstadistica++;
             return true;
-            
         }
     }
 
@@ -53,6 +50,7 @@ public static class API {
         if (sesionIniciada)
         {
             TiemposFueraCarril.Add(tiempo);
+            TiemposRegistroCarril.Add(timer());
         }
     }
 
@@ -91,29 +89,31 @@ public static class API {
 
     public static bool finalizarSesion()
     {
-        if (sesionIniciada)
+        if (sesionIniciada && !procesandoFinalizar)
         {
-
-
-            //Reseteando Variables
             sesionIniciada = false;
-            rutActual = string.Empty;
-            tiempoTotal = timer();
+            procesandoFinalizar = true;
 
-            //Limpiando Arreglos
+            WWWForm form = new WWWForm();
+            form = generarJSON(form);
+
+            WWW www = new WWW("http://claseb.dribyte.cl/estadisticas", form);
+            Debug.Log(www);
+
+            //Limpiando Arreglos y Variables
             Velocidad.Clear();
             TiemposVelocidad.Clear();
-
             TiemposFueraCarril.Clear();
-
+            TiemposRegistroCarril.Clear();
             UtilizaLuces.Clear();
             TerrenoLuces.Clear();
-
             VelocidadCambio.Clear();
             RPMCambio.Clear();
             TipoCambio.Clear();
             TiempoCambio.Clear();
 
+            procesandoFinalizar = false;
+            rutActual = string.Empty;
             return true;
         }
         else
@@ -123,97 +123,159 @@ public static class API {
        
     }
 
-    public static string requestHTTP(string pagina, string datos)
+    //Metodos Privados//
+
+    private static string requestHTTP(string pagina, string datos)
     {
-        WebRequest request = WebRequest.Create(pagina);
-        request.Method = "POST";
-        byte[] byteArray = Encoding.UTF8.GetBytes(datos);
-        request.ContentType = "application/x-www-form-urlencoded";
-        request.ContentLength = byteArray.Length;
-        Stream dataStream = request.GetRequestStream();
-        dataStream.Write(byteArray, 0, byteArray.Length);
-        dataStream.Close();
+        string responseFromServer = "";
+        try
+        {
+            WebRequest request = WebRequest.Create(pagina);
+            request.Method = "POST";
+            byte[] byteArray = Encoding.UTF8.GetBytes(datos);
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = byteArray.Length;
+            Stream dataStream = request.GetRequestStream();
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            dataStream.Close();
 
-        WebResponse response = request.GetResponse();
-        Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-        dataStream = response.GetResponseStream();
-        StreamReader reader = new StreamReader(dataStream);
-        string responseFromServer = reader.ReadToEnd();
-        Console.WriteLine(responseFromServer);
+            WebResponse response = request.GetResponse();
+            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+            dataStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(dataStream);
+            responseFromServer = reader.ReadToEnd();
+            Console.WriteLine(responseFromServer);
 
-        reader.Close();
-        dataStream.Close();
-        response.Close();
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+        }
+        catch (Exception e)
+        {
+            responseFromServer = e.Message;
+        }
 
         return responseFromServer;
     }
 
-    public static string filesHTTP(string uriString, string fileName)
+    private static string filesHTTP(string uriString, string fileName)
     {
-        WebClient myWebClient = new WebClient();
-        byte[] responseArray = myWebClient.UploadFile(uriString, "POST", fileName);
-        string response = System.Text.Encoding.ASCII.GetString(responseArray);
-
+        string response = "";
+        try
+        {
+            WebClient myWebClient = new WebClient();
+            myWebClient.Headers.Add("Content-Type", "application/json");
+            byte[] responseArray = myWebClient.UploadFile(uriString, "POST", fileName);
+            response = Encoding.ASCII.GetString(responseArray);
+        }
+        catch (Exception e)
+        {
+            response = e.Message;
+        }
+        
         return response;
     }
-
-
-    //Metodos Privados//
 
     private static int timer()
     {
         return (int)Time.realtimeSinceStartup;
     }
 
-    private static void generarJSON()
+    private static string volcarArchivo(string nameFile)
     {
-        int contador1 = 0;
-        string fecha = DateTime.Now.ToString();
+        string line = "";
+        string data = "";
 
-        StreamWriter file = new StreamWriter("datos.json");
-        file.WriteLine("{\"estadisticas\":{");
+        StreamReader file = new StreamReader(nameFile);
+        while ((line = file.ReadLine()) != null)
+            data += line;
 
-        //Escritura informaciones
-        file.WriteLine("\"informacion\": {");
-        file.WriteLine("\"fecha\": \"10/9/2014 9:45:06 PM\",");
-        file.WriteLine("\"rut\": \"11222333-4\",");
-        file.WriteLine("\"clase\": 1,");
-        file.WriteLine("\"generacion\": 14,");
-        file.WriteLine("\"key\": \"A3763NF832\"");
-        file.WriteLine("},");
-
-        //Escritura velocidad
-        file.WriteLine("\"velocidad\": {");
-        file.WriteLine("\"promedio\": 1,");
-        file.WriteLine("\"maxima\": 1,");
-        file.WriteLine("\"minima\": 1,");
-        file.WriteLine("\"lista\": [");
-
-        file.WriteLine("{\"t\": 1, \"v\": 50},");
-        file.WriteLine("{\"t\": 2, \"v\": 60},");
-        file.WriteLine("{\"t\": 3, \"v\": 70},");
-        file.WriteLine("{\"t\": 4, \"v\": 70},");
-        file.WriteLine("{\"t\": 5, \"v\": 70},");
-        file.WriteLine("{\"t\": 6, \"v\": 80},");
-        file.WriteLine("{\"t\": 10, \"v\": 90},");
-        file.WriteLine("{\"t\": 12, \"v\": 00},");
-
-        file.WriteLine("],");
-        file.WriteLine("},");
-
-        //Escritura carril
-        file.WriteLine("\"carril\": {");
-        file.WriteLine("\"dentro\": 490,");
-        file.WriteLine("\"fuera\": 80");
-        file.WriteLine("},");
-
-        file.Close();
-        contador1++;
-
+        return data;
     }
 
-    private static void tratamientoDatos()
+    private static WWWForm generarJSON(WWWForm form)
     {
+        //Preparando variables
+        string fecha = DateTime.Now.ToString();
+        string itemVelocidad = "";
+        string itemTiempo = "";
+        string itemRuta = "";
+        string itemVelCambio = "";
+        string itemRPMCambio = "";
+        string itemFueraCarril = "";
 
+        int tiempoTotalJuego = timer();
+        int tiempoFueraCarril = 0;
+        int tiempoDentroCarril = 0;
+        int contador = 0;
+        int velMedia = 0;
+        int velMaxima = 0;
+        int velMinima = 0;
+
+        //Tratamiento de datos
+        foreach (int collection in Velocidad)
+        {
+            itemVelocidad += collection.ToString() + ",";
+            velMedia += collection;
+            contador++;
+            if (collection > velMaxima)
+                velMaxima = collection;
+            if (collection < velMinima)
+                velMinima = collection;
+        }
+        itemVelocidad = itemVelocidad.Substring(0, itemVelocidad.Length - 1);
+        velMedia = velMedia / contador;
+
+        foreach (var collection in TiemposVelocidad)
+            itemTiempo += collection.ToString() + ",";
+        itemTiempo = itemTiempo.Substring(0, itemTiempo.Length - 1);
+
+        foreach (var collection in VelocidadCambio)
+            itemVelCambio += collection.ToString() + ",";
+        itemVelCambio = itemVelCambio.Substring(0, itemVelCambio.Length - 1);
+
+        foreach (var collection in RPMCambio)
+            itemRPMCambio += collection.ToString() + ",";
+        itemRPMCambio = itemRPMCambio.Substring(0, itemRPMCambio.Length - 1);
+
+        foreach (int collection in TiemposFueraCarril)
+        {
+            itemFueraCarril += collection.ToString() + ",";
+            tiempoFueraCarril += collection;
+        }
+        itemFueraCarril = itemFueraCarril.Substring(0, itemFueraCarril.Length - 1);
+        tiempoDentroCarril = tiempoTotalJuego - tiempoFueraCarril;
+
+        //LLenar Form HTML
+        form.AddField("estadisticas[velocidad]", itemVelocidad);
+        form.AddField("estadisticas[tiempoVelocidad]", itemTiempo);
+        form.AddField("estadisticas[velocidadMedia]", velMedia.ToString());
+        form.AddField("estadisticas[velocidadMaxima]", velMaxima.ToString());
+        form.AddField("estadisticas[velocidadMinima]", velMinima.ToString());
+        form.AddField("estadisticas[ruta]", itemRuta);
+        form.AddField("estadisticas[cambiosVelocidad]", itemVelCambio);
+        form.AddField("estadisticas[cambiosRpm]", itemRPMCambio);
+        form.AddField("estadisticas[rut]", rutActual);
+        form.AddField("estadisticas[tiempoCarril]", tiempoDentroCarril);
+        form.AddField("estadisticas[tiempoFueraCarril]", tiempoFueraCarril);
+
+        //Escritura Archivo
+        /*StreamWriter file = new StreamWriter("Estadisticas/estadistica" + contadorEstadistica.ToString() + ".json");
+        file.WriteLine("{");
+        file.WriteLine("\"velocidad\":[" + itemVelocidad + "],");
+        file.WriteLine("\"tiempoVelocidad\":[" + itemTiempo + "],");
+        file.WriteLine("\"velocidadMedia\":" + velMedia.ToString() + ",");
+        file.WriteLine("\"velocidadMaxima\":" + velMaxima.ToString() + ",");
+        file.WriteLine("\"velocidadMinima\":" + velMinima.ToString() + ",");
+        file.WriteLine("\"ruta\": \"" + itemRuta + "\",");
+        file.WriteLine("\"cambiosVelocidad\":[" + itemVelCambio + "],");
+        file.WriteLine("\"cambiosRpm\":[" + itemRPMCambio + "],");
+        file.WriteLine("\"rut\":\"" + rutActual + "\",");
+        file.WriteLine("\"tiempoCarril\":" + tiempoDentroCarril + ",");
+        file.WriteLine("\"tiempoFueraCarril\":" + tiempoFueraCarril);
+        file.WriteLine("}");
+        file.Close();*/
+
+        return form;
     }
 }
