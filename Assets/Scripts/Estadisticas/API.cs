@@ -5,6 +5,11 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 
+using System;
+using System.IO;
+using System.Net;
+using System.Text;
+
 public static class API {
 
     private static bool sesionIniciada = false;
@@ -23,6 +28,8 @@ public static class API {
     private static List<int> RPMCambio = new List<int>();
     private static List<int> TipoCambio = new List<int>();
     private static List<int> TiempoCambio = new List<int>();
+
+    
 
     //Iniciar Sesion para el registro de estadisticas
     public static bool startSesion(string RUT)
@@ -88,31 +95,12 @@ public static class API {
         {
 
 
-
-            XDocument doc = new XDocument(
-            new XDeclaration("1.0", "utf-8", "no"),
-            new XComment("Starbuzz Customer Loyalty Data"),
-            new XElement("Contacts",
-                new XElement("Contacto1",
-                    new XElement("Name", "Patrick Hines"),
-                    new XElement("Phone", "206-555-0144"),
-                    new XElement("Address",
-                        new XElement("Street1", "123 Main St"),
-                        new XElement("City", "Mercer Island"),
-                        new XElement("State", "WA"),
-                        new XElement("Postal", "68042")
-                    )
-                )
-            )
-         );
-
-
             //Reseteando Variables
             sesionIniciada = false;
             rutActual = string.Empty;
             tiempoTotal = timer();
 
-            //Reseteando Arreglos
+            //Limpiando Arreglos
             Velocidad.Clear();
             TiemposVelocidad.Clear();
 
@@ -135,60 +123,39 @@ public static class API {
        
     }
 
-    public static void crearDocumento()
+    public static string requestHTTP(string pagina, string datos)
     {
-        XDocument doc = new XDocument(
-            new XDeclaration("1.0", "utf-8", "no"),
-            new XComment("Starbuzz Customer Loyalty Data"),
-            new XElement("Contacts",
-                new XElement("Contacto1",
-                    new XElement("Name", "Patrick Hines"),
-                    new XElement("Phone", "206-555-0144"),
-                    new XElement("Address",
-                        new XElement("Street1", "123 Main St"),
-                        new XElement("City", "Mercer Island"),
-                        new XElement("State", "WA"),
-                        new XElement("Postal", "68042")
-                    )
-                )
-            )
-         );
+        WebRequest request = WebRequest.Create(pagina);
+        request.Method = "POST";
+        byte[] byteArray = Encoding.UTF8.GetBytes(datos);
+        request.ContentType = "application/x-www-form-urlencoded";
+        request.ContentLength = byteArray.Length;
+        Stream dataStream = request.GetRequestStream();
+        dataStream.Write(byteArray, 0, byteArray.Length);
+        dataStream.Close();
 
-        XElement nuevo = new XElement("Contacto2",
-            new XElement("Name", "Patrick Hines"),
-            new XElement("Phone", "206-555-0144"),
-            new XElement("Address",
-                new XElement("Street1", "123 Main St"),
-                new XElement("City", "Mercer Island"),
-                new XElement("State", "WA"),
-                new XElement("Postal", "68042")
-            )
-        );
-        doc.Root.Add(nuevo);
+        WebResponse response = request.GetResponse();
+        Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+        dataStream = response.GetResponseStream();
+        StreamReader reader = new StreamReader(dataStream);
+        string responseFromServer = reader.ReadToEnd();
+        Console.WriteLine(responseFromServer);
 
-        XElement nuevo2 = new XElement("Contacto3",
-            new XElement("Name", "Patrick Hines"),
-            new XElement("Phone", "206-555-0144"),
-            new XElement("Address",
-                new XElement("Street1", "123 Main St"),
-                new XElement("City", "Mercer Island"),
-                new XElement("State", "WA"),
-                new XElement("Postal", "68042")
-            )
-        );
-        doc.Root.Add(nuevo2);
+        reader.Close();
+        dataStream.Close();
+        response.Close();
 
-        XElement nuevo3 = new XElement("Phone2", "206-555-0144");
-
-        doc.Descendants("Name").Last().AddAfterSelf(nuevo3);
-
-        doc.AddFirst(new XElement("NewChild", "new content"));
-        doc.AddFirst(new XElement("NewChild", "new content"));
-        doc.AddFirst(new XElement("NewChild", "new content"));
-
-        doc.Save("prueba21.xml");
+        return responseFromServer;
     }
 
+    public static string filesHTTP(string uriString, string fileName)
+    {
+        WebClient myWebClient = new WebClient();
+        byte[] responseArray = myWebClient.UploadFile(uriString, "POST", fileName);
+        string response = System.Text.Encoding.ASCII.GetString(responseArray);
+
+        return response;
+    }
 
 
     //Metodos Privados//
@@ -200,6 +167,48 @@ public static class API {
 
     private static void generarJSON()
     {
+        int contador1 = 0;
+        string fecha = DateTime.Now.ToString();
+
+        StreamWriter file = new StreamWriter("datos.json");
+        file.WriteLine("{\"estadisticas\":{");
+
+        //Escritura informaciones
+        file.WriteLine("\"informacion\": {");
+        file.WriteLine("\"fecha\": \"10/9/2014 9:45:06 PM\",");
+        file.WriteLine("\"rut\": \"11222333-4\",");
+        file.WriteLine("\"clase\": 1,");
+        file.WriteLine("\"generacion\": 14,");
+        file.WriteLine("\"key\": \"A3763NF832\"");
+        file.WriteLine("},");
+
+        //Escritura velocidad
+        file.WriteLine("\"velocidad\": {");
+        file.WriteLine("\"promedio\": 1,");
+        file.WriteLine("\"maxima\": 1,");
+        file.WriteLine("\"minima\": 1,");
+        file.WriteLine("\"lista\": [");
+
+        file.WriteLine("{\"t\": 1, \"v\": 50},");
+        file.WriteLine("{\"t\": 2, \"v\": 60},");
+        file.WriteLine("{\"t\": 3, \"v\": 70},");
+        file.WriteLine("{\"t\": 4, \"v\": 70},");
+        file.WriteLine("{\"t\": 5, \"v\": 70},");
+        file.WriteLine("{\"t\": 6, \"v\": 80},");
+        file.WriteLine("{\"t\": 10, \"v\": 90},");
+        file.WriteLine("{\"t\": 12, \"v\": 00},");
+
+        file.WriteLine("],");
+        file.WriteLine("},");
+
+        //Escritura carril
+        file.WriteLine("\"carril\": {");
+        file.WriteLine("\"dentro\": 490,");
+        file.WriteLine("\"fuera\": 80");
+        file.WriteLine("},");
+
+        file.Close();
+        contador1++;
 
     }
 
