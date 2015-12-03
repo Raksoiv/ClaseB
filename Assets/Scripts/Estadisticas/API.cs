@@ -97,13 +97,9 @@ public static class API {
             WWWForm form = new WWWForm();
             form = generarJSON(form);
 
-            //WWW www = new WWW("http://claseb.dribyte.cl/estadisticas", form);
-            //WWW www = new WWW("http://insive.cl/temp/prueba1.php", form);
-            //Debug.Log(www);
-
             string file = volcarArchivo("Estadisticas/estadistica" + contadorEstadistica.ToString() + ".json");
             Debug.Log(file);
-            string retorno = requestHTTP("http://claseb.dribyte.cl/estadisticas.json", file);
+            string retorno = requestHTTP("http://claseb.dribyte.cl/api/v1/estadisticas", file);
             Debug.Log(retorno);
 
             //Limpiando Arreglos y Variables
@@ -129,16 +125,15 @@ public static class API {
        
     }
 
-    //Metodos Privados//
-
-    private static string requestHTTP(string pagina, string datos)
+    public static string requestHTTP(string pagina, string datos)
     {
         string responseFromServer = "";
         try
         {
-            WebRequest request = WebRequest.Create(pagina);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(pagina);
             request.Method = "POST";
             byte[] byteArray = Encoding.UTF8.GetBytes(datos);
+            request.Accept = "application/json";
             request.ContentType = "application/json";
             request.ContentLength = byteArray.Length;
             Stream dataStream = request.GetRequestStream();
@@ -164,7 +159,7 @@ public static class API {
         return responseFromServer;
     }
 
-    private static string filesHTTP(string uriString, string fileName)
+    public static string filesHTTP(string uriString, string fileName)
     {
         string response = "";
         try
@@ -261,7 +256,7 @@ public static class API {
         form.AddField("estadisticas[ruta]", itemRuta);
         form.AddField("estadisticas[cambiosVelocidad]", "[" + itemVelCambio + "]");
         form.AddField("estadisticas[cambiosRpm]", "[" + itemRPMCambio + "]");
-        form.AddField("estadisticas[rut]", rutActual);
+        form.AddField("estadisticas[alumno_id]", rutActual);
         form.AddField("estadisticas[tiempoCarril]", tiempoDentroCarril);
         form.AddField("estadisticas[tiempoFueraCarril]", tiempoFueraCarril);
 
@@ -276,7 +271,7 @@ public static class API {
         file.WriteLine("\"ruta\": \"" + itemRuta + "\",");
         file.WriteLine("\"cambiosVelocidad\":[" + itemVelCambio + "],");
         file.WriteLine("\"cambiosRpm\":[" + itemRPMCambio + "],");
-        file.WriteLine("\"rut\":\"" + rutActual + "\",");
+        file.WriteLine("\"alumno_id\":" + rutActual + ",");
         file.WriteLine("\"tiempoCarril\":" + tiempoDentroCarril + ",");
         file.WriteLine("\"tiempoFueraCarril\":" + tiempoFueraCarril);
         file.WriteLine("}");
