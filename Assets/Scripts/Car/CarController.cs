@@ -93,7 +93,7 @@ public class CarController : MonoBehaviour {
 		if (timeToSendData > 5) {
 			float speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
 			API.registrarVelocidad(speed);
-			Debug.Log(speed);
+			Debug.Log("Speed: "+speed.ToString());
 			timeToSendData = 0;
 		}
 	}
