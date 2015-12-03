@@ -12,8 +12,8 @@ public static class API {
     private static string rutActual = string.Empty;
     private static int contadorEstadistica = 0;
 
-    private static List<int> Velocidad = new List<int>();
-    private static List<int> TiemposVelocidad = new List<int>();
+    private static List<float> Velocidad = new List<float>();
+    private static List<float> TiemposVelocidad = new List<float>();
 
     private static List<int> TiemposFueraCarril = new List<int>();
     private static List<int> TiemposRegistroCarril = new List<int>();
@@ -64,7 +64,7 @@ public static class API {
     }
 
     //Registra la velocidad en un tiempo dado
-    public static void registrarVelocidad(int velocidad)
+    public static void registrarVelocidad(float velocidad)
     {
         if (sesionIniciada)
         {
@@ -75,7 +75,7 @@ public static class API {
     }
 
     //Registra la velocidad y RPM a las que pasa a un cambio determinado
-    public static void registrarCambio(int velocidad, int RPM, int cambio)
+    public static void registrarCambio(float velocidad, int RPM, int cambio)
     {
         if (sesionIniciada)
         {
