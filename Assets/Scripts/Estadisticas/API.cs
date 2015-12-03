@@ -97,8 +97,14 @@ public static class API {
             WWWForm form = new WWWForm();
             form = generarJSON(form);
 
-            WWW www = new WWW("http://claseb.dribyte.cl/estadisticas", form);
-            Debug.Log(www);
+            //WWW www = new WWW("http://claseb.dribyte.cl/estadisticas", form);
+            //WWW www = new WWW("http://insive.cl/temp/prueba1.php", form);
+            //Debug.Log(www);
+
+            string file = volcarArchivo("Estadisticas/estadistica" + contadorEstadistica.ToString() + ".json");
+            Debug.Log(file);
+            string retorno = requestHTTP("http://claseb.dribyte.cl/estadisticas.json", file);
+            Debug.Log(retorno);
 
             //Limpiando Arreglos y Variables
             Velocidad.Clear();
@@ -133,18 +139,18 @@ public static class API {
             WebRequest request = WebRequest.Create(pagina);
             request.Method = "POST";
             byte[] byteArray = Encoding.UTF8.GetBytes(datos);
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentType = "application/json";
             request.ContentLength = byteArray.Length;
             Stream dataStream = request.GetRequestStream();
             dataStream.Write(byteArray, 0, byteArray.Length);
             dataStream.Close();
 
             WebResponse response = request.GetResponse();
-            Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+            //Debug.Log(((HttpWebResponse)response).StatusDescription);
             dataStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(dataStream);
             responseFromServer = reader.ReadToEnd();
-            Console.WriteLine(responseFromServer);
+            //Debug.Log(responseFromServer);
 
             reader.Close();
             dataStream.Close();
@@ -247,20 +253,20 @@ public static class API {
         tiempoDentroCarril = tiempoTotalJuego - tiempoFueraCarril;
 
         //LLenar Form HTML
-        form.AddField("estadisticas[velocidad]", itemVelocidad);
-        form.AddField("estadisticas[tiempoVelocidad]", itemTiempo);
+        form.AddField("estadisticas[velocidad]", "[" + itemVelocidad + "]");
+        form.AddField("estadisticas[tiempoVelocidad]", "[" + itemTiempo + "]");
         form.AddField("estadisticas[velocidadMedia]", velMedia.ToString());
         form.AddField("estadisticas[velocidadMaxima]", velMaxima.ToString());
         form.AddField("estadisticas[velocidadMinima]", velMinima.ToString());
         form.AddField("estadisticas[ruta]", itemRuta);
-        form.AddField("estadisticas[cambiosVelocidad]", itemVelCambio);
-        form.AddField("estadisticas[cambiosRpm]", itemRPMCambio);
+        form.AddField("estadisticas[cambiosVelocidad]", "[" + itemVelCambio + "]");
+        form.AddField("estadisticas[cambiosRpm]", "[" + itemRPMCambio + "]");
         form.AddField("estadisticas[rut]", rutActual);
         form.AddField("estadisticas[tiempoCarril]", tiempoDentroCarril);
         form.AddField("estadisticas[tiempoFueraCarril]", tiempoFueraCarril);
 
         //Escritura Archivo
-        /*StreamWriter file = new StreamWriter("Estadisticas/estadistica" + contadorEstadistica.ToString() + ".json");
+        StreamWriter file = new StreamWriter("Estadisticas/estadistica" + contadorEstadistica.ToString() + ".json");
         file.WriteLine("{");
         file.WriteLine("\"velocidad\":[" + itemVelocidad + "],");
         file.WriteLine("\"tiempoVelocidad\":[" + itemTiempo + "],");
@@ -274,7 +280,7 @@ public static class API {
         file.WriteLine("\"tiempoCarril\":" + tiempoDentroCarril + ",");
         file.WriteLine("\"tiempoFueraCarril\":" + tiempoFueraCarril);
         file.WriteLine("}");
-        file.Close();*/
+        file.Close();
 
         return form;
     }

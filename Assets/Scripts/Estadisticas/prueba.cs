@@ -3,9 +3,11 @@ using System.Collections;
 
 public class prueba : MonoBehaviour {
 
+    bool retorno = false;
+
 	// Use this for initialization
 	void Start () {
-        API.startSesion("17921200-0");
+        Debug.Log(API.startSesion("17921200-5"));
         API.salidaCarril(2);
     }
 	
@@ -19,10 +21,10 @@ public class prueba : MonoBehaviour {
             API.registrarCambio(50, 4000, 3);
             
         }
-        if (tiempo == 5)
+        if (tiempo >= 5 && !retorno)
         {
-            bool retorno = API.finalizarSesion();
-            //Debug.Log(retorno);
+            retorno = API.finalizarSesion();
+            Debug.Log(retorno);
         }
 	}
 }
