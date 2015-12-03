@@ -13,7 +13,7 @@ public static class API {
     private static int contadorEstadistica = 0;
 
     private static List<float> Velocidad = new List<float>();
-    private static List<float> TiemposVelocidad = new List<float>();
+    private static List<int> TiemposVelocidad = new List<int>();
 
     private static List<int> TiemposFueraCarril = new List<int>();
     private static List<int> TiemposRegistroCarril = new List<int>();
@@ -21,7 +21,7 @@ public static class API {
     private static List<bool> UtilizaLuces = new List<bool>();
     private static List<int> TerrenoLuces = new List<int>();
 
-    private static List<int> VelocidadCambio = new List<int>();
+    private static List<float> VelocidadCambio = new List<float>();
     private static List<int> RPMCambio = new List<int>();
     private static List<int> TipoCambio = new List<int>();
     private static List<int> TiempoCambio = new List<int>();
