@@ -85,6 +85,10 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &199553365 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 457752, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
+  m_PrefabInternal: {fileID: 345274680}
 --- !u!1001 &345274680
 Prefab:
   m_ObjectHideFlags: 0
@@ -236,6 +240,10 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: 1.17799997
       objectReference: {fileID: 0}
+    - target: {fileID: 117514, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11480264, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
     - {fileID: 11437630, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
@@ -244,10 +252,124 @@ Prefab:
     - {fileID: 11498376, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
   m_IsPrefabParent: 0
+--- !u!4 &467784248 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 487092, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
+  m_PrefabInternal: {fileID: 345274680}
+--- !u!4 &483539418 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 403930, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
+  m_PrefabInternal: {fileID: 345274680}
+--- !u!4 &563371691 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 402974, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
+  m_PrefabInternal: {fileID: 345274680}
 --- !u!1 &613588745 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 117514, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
   m_PrefabInternal: {fileID: 345274680}
+--- !u!114 &613588747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 613588745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a5cce73dba9d7d4195bab0211ab2ba0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  torqueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 1000
+      value: 55
+      inSlope: .0599999987
+      outSlope: .0599999987
+      tangentMode: 10
+    - time: 1500
+      value: 85
+      inSlope: .0429999977
+      outSlope: .0429999977
+      tangentMode: 10
+    - time: 2000
+      value: 98
+      inSlope: .0210000016
+      outSlope: .0210000016
+      tangentMode: 10
+    - time: 2500
+      value: 106
+      inSlope: .0140000004
+      outSlope: .0140000004
+      tangentMode: 10
+    - time: 3000
+      value: 112
+      inSlope: .0120000001
+      outSlope: .0120000001
+      tangentMode: 10
+    - time: 3500
+      value: 118
+      inSlope: .00999999978
+      outSlope: .00999999978
+      tangentMode: 10
+    - time: 4000
+      value: 122
+      inSlope: .00200000009
+      outSlope: .00200000009
+      tangentMode: 10
+    - time: 4500
+      value: 120
+      inSlope: -.00700000022
+      outSlope: -.00700000022
+      tangentMode: 10
+    - time: 5000
+      value: 115
+      inSlope: -.0120000001
+      outSlope: -.0120000001
+      tangentMode: 10
+    - time: 5500
+      value: 108
+      inSlope: -.012764724
+      outSlope: -.012764724
+      tangentMode: 0
+    - time: 6000
+      value: 102
+      inSlope: -.0171057545
+      outSlope: -.0171057545
+      tangentMode: 0
+    - time: 6500
+      value: 85
+      inSlope: -.0340000018
+      outSlope: -.0340000018
+      tangentMode: 10
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  gearRatios:
+  - 0
+  - 3.54500008
+  - 1.89499998
+  - 1.19200003
+  - .852999985
+  - .718999982
+  - 0
+  - 3.63599992
+  finalGearRatio: 4.4369998
+  minRPM: 1000
+  maxRPM: 6500
+  wheelColliders:
+  - {fileID: 635181465}
+  - {fileID: 1516188191}
+  - {fileID: 1889010427}
+  - {fileID: 1111185190}
+  tireMeshes:
+  - {fileID: 483539418}
+  - {fileID: 199553365}
+  - {fileID: 1088739662}
+  - {fileID: 563371691}
+  brakingForce: 3500
+  engineInertia: 200
+  transmissionEfficiency: .699999988
+  Cmotor: .300000012
 --- !u!114 &613588748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,82 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b838e828fcd4aa4a99c625f23293ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TorqueCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 1500
-      value: 105
-      inSlope: .0260000005
-      outSlope: .0260000005
-      tangentMode: 10
-    - time: 2000
-      value: 118
-      inSlope: .00308792968
-      outSlope: .00308792968
-      tangentMode: 0
-    - time: 2500
-      value: 121
-      inSlope: .0141491611
-      outSlope: .0141491611
-      tangentMode: 0
-    - time: 3000
-      value: 130
-      inSlope: .00939922594
-      outSlope: .00939922594
-      tangentMode: 0
-    - time: 3500
-      value: 133
-      inSlope: .00311202253
-      outSlope: .00311202253
-      tangentMode: 0
-    - time: 4000
-      value: 134
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 4250
-      value: 131
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 4500
-      value: 132
-      inSlope: -.00478645926
-      outSlope: -.00478645926
-      tangentMode: 0
-    - time: 5000
-      value: 128
-      inSlope: -.00890661497
-      outSlope: -.00890661497
-      tangentMode: 0
-    - time: 5500
-      value: 123
-      inSlope: -.0109247882
-      outSlope: -.0109247882
-      tangentMode: 0
-    - time: 5996.04395
-      value: 117
-      inSlope: -.0147349071
-      outSlope: -.0147349071
-      tangentMode: 0
-    - time: 6200
-      value: 114
-      inSlope: -.0147090508
-      outSlope: -.0147090508
-      tangentMode: 10
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  Flong: 0
-  Ftraction: 0
-  Fdrag: 0
-  Frr: 0
-  Fbraking: 0
-  velocity: 0
-  wheels:
-  - {fileID: 635181465}
-  - {fileID: 1516188191}
-  - {fileID: 1889010427}
-  - {fileID: 1111185190}
+  steeringWheel: {fileID: 467784248}
 --- !u!146 &635181465 stripped
 WheelCollider:
   m_PrefabParentObject: {fileID: 14647314, guid: 002c81ed8d9d4544abf16b03b59842d4,
@@ -475,6 +522,10 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!4 &1088739662 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 449132, guid: 002c81ed8d9d4544abf16b03b59842d4, type: 2}
+  m_PrefabInternal: {fileID: 345274680}
 --- !u!146 &1111185190 stripped
 WheelCollider:
   m_PrefabParentObject: {fileID: 14663652, guid: 002c81ed8d9d4544abf16b03b59842d4,
@@ -485,6 +536,104 @@ WheelCollider:
   m_PrefabParentObject: {fileID: 14607876, guid: 002c81ed8d9d4544abf16b03b59842d4,
     type: 2}
   m_PrefabInternal: {fileID: 345274680}
+--- !u!1 &1764301958
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1764301964}
+  - 20: {fileID: 1764301963}
+  - 124: {fileID: 1764301962}
+  - 92: {fileID: 1764301961}
+  - 81: {fileID: 1764301960}
+  - 114: {fileID: 1764301959}
+  m_Layer: 0
+  m_Name: Camera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1764301959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764301958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd8d90ee3f5cd1b40ac1a13f29e85c5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!81 &1764301960
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764301958}
+  m_Enabled: 1
+--- !u!92 &1764301961
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764301958}
+  m_Enabled: 1
+--- !u!124 &1764301962
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764301958}
+  m_Enabled: 1
+--- !u!20 &1764301963
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764301958}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: .300000012
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
+--- !u!4 &1764301964
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1764301958}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
 --- !u!146 &1889010427 stripped
 WheelCollider:
   m_PrefabParentObject: {fileID: 14612824, guid: 002c81ed8d9d4544abf16b03b59842d4,

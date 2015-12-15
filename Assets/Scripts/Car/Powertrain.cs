@@ -89,12 +89,15 @@ public class Powertrain : MonoBehaviour {
 		//Calculando el torque con la ayuda de las formulas obtenidas desde:
 		//http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
 		//http://forum.unity3d.com/threads/how-to-add-clutch-setting-in-truck-physics.65884/
+		//Torque curve and Gear Shifts http://www.automobile-catalog.com/car/2014/1978790/hyundai_i10_1_2.html
 		
-		float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
+		//float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
+		float wheelRPM = (rigidbody.velocity.magnitude / .33f) * (60 / (2 * Mathf.PI));
+		Debug.Log(wheelRPM);
 		//Desengaged Engine
 		float disengagedEngineRPM;
 		if(throttle > 0){
-			disengagedEngineRPM = engineInertia * throttle + engineRPM;
+			disengagedEngineRPM = (maxRPM - 1000) * throttle + 1000;
 		}
 		else{
 			if(engineRPM > minRPM){
@@ -114,6 +117,9 @@ public class Powertrain : MonoBehaviour {
 		if(engineRPM > maxRPM){
 			engineRPM = maxRPM;
 		}
+		if(currentGear == 0){
+			engineRPM = disengagedEngineRPM;
+		}
 		
 		//Calcular torque desde la curva.
 		float engineTorque = torqueCurve.Evaluate (engineRPM) * throttle;
@@ -132,6 +138,12 @@ public class Powertrain : MonoBehaviour {
 	void Update(){
 		UpdateWheelMeshesPositions ();
 		driveTorque = CalculateWheelTorque ();
+		if(engineRPM >= maxRPM - 10){
+			driveTorque = 0;
+		}
+		if(engineRPM < minRPM - 200){
+			ShiftTo(0);
+		}
 	}
 
 	void FixedUpdate () {
@@ -154,14 +166,17 @@ public class Powertrain : MonoBehaviour {
 		if (currentGear > 0)
 			currentGear--;
 	}
-	public void ShiftTo(int targetGear){
-		if (clutch < 0.2) {
-			if (targetGear >= 0 && targetGear <= gearRatios.Length)
+	public bool ShiftTo(int targetGear){
+		if (clutch > 0.8) {
+			if (targetGear >= 0 && targetGear <= gearRatios.Length && currentGear != targetGear){
 				currentGear = targetGear;
+				return true;
+			}
 		}
-		else {
+		else if(currentGear != targetGear) {
 			currentGear = 0;
 		}
+		return false;
 	}
 	public int GetCurrentGear(){
 		return currentGear;
