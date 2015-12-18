@@ -29,7 +29,7 @@ public class Powertrain : MonoBehaviour {
 	float clutch;
 	float steering;
 
-	static Rigidbody rigidbody;
+	//static Rigidbody rigidbody;
 	static float engineRPM;
 
 	public float Throttle {
@@ -68,8 +68,20 @@ public class Powertrain : MonoBehaviour {
 		}
 	}
 
+	public int GetRPMS(int select){
+		switch (select) {
+			case 0:
+				return minRPM;
+			case 1:
+				return (int)engineRPM;
+			case 2:
+				return maxRPM;
+		}
+		return 0;
+	}
+
 	void Start(){
-		rigidbody = GetComponent<Rigidbody> ();
+		//rigidbody = GetComponent<Rigidbody> ();
 	}
 
 	void UpdateWheelMeshesPositions(){
@@ -92,8 +104,7 @@ public class Powertrain : MonoBehaviour {
 		//Torque curve and Gear Shifts http://www.automobile-catalog.com/car/2014/1978790/hyundai_i10_1_2.html
 		
 		//float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
-		float wheelRPM = (rigidbody.velocity.magnitude / .33f) * (60 / (2 * Mathf.PI));
-		Debug.Log(wheelRPM);
+		float wheelRPM = (GetComponent<Rigidbody>().velocity.magnitude / .33f) * (60 / (2 * Mathf.PI));
 		//Desengaged Engine
 		float disengagedEngineRPM;
 		if(throttle > 0){
@@ -124,6 +135,9 @@ public class Powertrain : MonoBehaviour {
 		//Calcular torque desde la curva.
 		float engineTorque = torqueCurve.Evaluate (engineRPM) * throttle;
 		float driveTorque =  engineTorque * gearRatios[currentGear] * finalGearRatio * (1 - clutch) * transmissionEfficiency;
+		if(currentGear == 7){
+			driveTorque *= -1;
+		}
 
 		return driveTorque;
 	}
@@ -186,7 +200,7 @@ public class Powertrain : MonoBehaviour {
 		rpm = (int)engineRPM;
 		return rpm;
 	}
-	static public int GetCurrentSpeed(){
-		return Mathf.FloorToInt(rigidbody.velocity.magnitude * 3.6f);
+	public int GetCurrentSpeed(){
+		return Mathf.FloorToInt(this.GetComponent<Rigidbody>().velocity.magnitude * 3.6f);
 	}
 }
