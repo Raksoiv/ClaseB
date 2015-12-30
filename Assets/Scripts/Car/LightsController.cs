@@ -88,69 +88,8 @@ public class LightsController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		//Update the timeSpend
 		timeSpend += Time.deltaTime;
-
-		//White Lights!
-		if (Input.GetButtonDown ("LightControl")) {
-			if (lightState == 0) {
-				LowLightFrontLeft.enabled = true;
-				LowLightFrontRight.enabled = true;
-				LowBrakeLightLeft.enabled = true;
-				LowBrakeLightRight.enabled = true;
-				InnerPanelLight.enabled = true;
-				HighLightFrontLeft.enabled = false;
-				HighLightFrontRight.enabled = false;
-				lightState = 1;
-			}
-			else if (lightState == 1){
-				LowLightFrontLeft.enabled = false;
-				LowLightFrontRight.enabled = false;
-				HighLightFrontLeft.enabled = true;
-				HighLightFrontRight.enabled = true;
-				lightState = 2;
-			}
-			else if (lightState == 2){
-				LowLightFrontLeft.enabled = false;
-				LowLightFrontRight.enabled = false;
-				HighLightFrontLeft.enabled = false;
-				HighLightFrontRight.enabled = false;
-				LowBrakeLightLeft.enabled = false;
-				LowBrakeLightRight.enabled = false;
-				InnerPanelLight.enabled = false;
-				lightState = 0;
-			}
-		}
 		
-		//Turn Lights!
-		if(Input.GetButtonDown ("LightTurnRight")) {
-			if(turnRight) {
-				turnRight = false;
-				TurnLightFrontRight.enabled = false;
-				TurnLightBackRight.enabled = false;
-			}
-			else {
-				turnRight = true;
-				turnLeft = false;
-				TurnLightFrontLeft.enabled = false;
-				TurnLightBackLeft.enabled = false;
-			}
-		}
-		else if(Input.GetButtonDown ("LightTurnLeft")) {
-			if(turnLeft) {
-				turnLeft = false;
-				TurnLightFrontLeft.enabled = false;
-				TurnLightBackLeft.enabled = false;
-			}
-			else {
-				turnLeft = true;
-				turnRight = false;
-				TurnLightFrontRight.enabled = false;
-				TurnLightBackRight.enabled = false;
-			}
-		}
-
 		//TurnLeft
 		if(turnLeft){
 			if(timeSpend > .5){
@@ -171,10 +110,68 @@ public class LightsController : MonoBehaviour {
 				timeSpend = 0;
 			}
 		}
+	}
 
-		//Brake Lights
-		float accelerate = Input.GetAxis ("Vertical");
-		if (accelerate < 0) {
+	public void WhiteLights(){
+		if (lightState == 0) {
+			LowLightFrontLeft.enabled = true;
+			LowLightFrontRight.enabled = true;
+			LowBrakeLightLeft.enabled = true;
+			LowBrakeLightRight.enabled = true;
+			InnerPanelLight.enabled = true;
+			HighLightFrontLeft.enabled = false;
+			HighLightFrontRight.enabled = false;
+			lightState = 1;
+		}
+		else if (lightState == 1){
+			LowLightFrontLeft.enabled = false;
+			LowLightFrontRight.enabled = false;
+			HighLightFrontLeft.enabled = true;
+			HighLightFrontRight.enabled = true;
+			lightState = 2;
+		}
+		else if (lightState == 2){
+			LowLightFrontLeft.enabled = false;
+			LowLightFrontRight.enabled = false;
+			HighLightFrontLeft.enabled = false;
+			HighLightFrontRight.enabled = false;
+			LowBrakeLightLeft.enabled = false;
+			LowBrakeLightRight.enabled = false;
+			InnerPanelLight.enabled = false;
+			lightState = 0;
+		}
+	}
+
+	public void ActivateTurnRigth(){
+		if(turnRight) {
+			turnRight = false;
+			TurnLightFrontRight.enabled = false;
+			TurnLightBackRight.enabled = false;
+		}
+		else {
+			turnRight = true;
+			turnLeft = false;
+			TurnLightFrontLeft.enabled = false;
+			TurnLightBackLeft.enabled = false;
+		}
+	}
+
+	public void ActivateTurnLeft(){
+		if(turnLeft) {
+			turnLeft = false;
+			TurnLightFrontLeft.enabled = false;
+			TurnLightBackLeft.enabled = false;
+		}
+		else {
+			turnLeft = true;
+			turnRight = false;
+			TurnLightFrontRight.enabled = false;
+			TurnLightBackRight.enabled = false;
+		}
+	}
+
+	public void RedLights(float brake){
+		if (brake > 0) {
 			HighBrakeLightLeft.enabled = true;
 			HighBrakeLightRight.enabled = true;
 		} else {

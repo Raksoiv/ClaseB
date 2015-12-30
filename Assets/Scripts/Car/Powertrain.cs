@@ -18,6 +18,9 @@ public class Powertrain : MonoBehaviour {
 	[SerializeField]private int brakingForce;										//Fuerza de Frenado (en Newtons)
 	[SerializeField]private int engineInertia;										//Inercia del motor ocupada para acelerar en neutro.
 	[SerializeField]private float transmissionEfficiency = 0.7f;					//Eficiencia del sistema de transmision
+	[SerializeField]private float Cmotor = .3f;														//Tasa de perdida de RPM del motor
+
+	private float driveTorque;
 
 
 	int currentGear = 0;
@@ -26,7 +29,7 @@ public class Powertrain : MonoBehaviour {
 	float clutch;
 	float steering;
 
-	static Rigidbody rigidbody;
+	//static Rigidbody rigidbody;
 	static float engineRPM;
 
 	public float Throttle {
@@ -65,8 +68,20 @@ public class Powertrain : MonoBehaviour {
 		}
 	}
 
+	public int GetRPMS(int select){
+		switch (select) {
+			case 0:
+				return minRPM;
+			case 1:
+				return (int)engineRPM;
+			case 2:
+				return maxRPM;
+		}
+		return 0;
+	}
+
 	void Start(){
-		rigidbody = GetComponent<Rigidbody> ();
+		//rigidbody = GetComponent<Rigidbody> ();
 	}
 
 	void UpdateWheelMeshesPositions(){
@@ -82,59 +97,72 @@ public class Powertrain : MonoBehaviour {
 		}
 	}
 
-	float CalculateWheelTorque(){
+	private float CalculateWheelTorque(){
 		//Calculando el torque con la ayuda de las formulas obtenidas desde:
 		//http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
 		//http://forum.unity3d.com/threads/how-to-add-clutch-setting-in-truck-physics.65884/
+		//Torque curve and Gear Shifts http://www.automobile-catalog.com/car/2014/1978790/hyundai_i10_1_2.html
 		
-		float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
-		float disengagedEngineRPM = wheelRPM * finalGearRatio * gearRatios [currentGear]; //if clutch == 0
-		float engagedEngineRPM = engineInertia * throttle + engineRPM;                    //if clutch == 1 
-		
-		//RPM del motor dependiendo del estado del embrague
-		engineRPM = (1 - clutch) * engagedEngineRPM + clutch * disengagedEngineRPM;
-
-		//neutro == clutch = 1
-		if (currentGear == 0) 
-			engineRPM = engagedEngineRPM;
-
-		if (currentGear == 0 || clutch == 0){ 
-			if (throttle == 0)
-				engineRPM = engineRPM - engineInertia * 0.3f;
-			
-			if (engineRPM < minRPM) 
-				engineRPM = minRPM;
+		//float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
+		float wheelRPM = (GetComponent<Rigidbody>().velocity.magnitude / .33f) * (60 / (2 * Mathf.PI));
+		//Desengaged Engine
+		float disengagedEngineRPM;
+		if(throttle > 0){
+			disengagedEngineRPM = (maxRPM - 1000) * throttle + 1000;
+		}
+		else{
+			if(engineRPM > minRPM){
+				disengagedEngineRPM = engineRPM - engineInertia * Cmotor;
+			}
+			else{
+				disengagedEngineRPM = minRPM;
+			}
 		}
 
-		if (engineRPM > maxRPM) {
-			if (throttle != 0) engineRPM = maxRPM; 
+		//Engaged Engine
+		float engagedEngineRPM;
+		engagedEngineRPM = wheelRPM * gearRatios[currentGear] * finalGearRatio;
+		
+		//RPM del motor dependiendo del estado del embrague
+		engineRPM = disengagedEngineRPM * clutch + engagedEngineRPM * (1 - clutch);
+		if(engineRPM > maxRPM){
+			engineRPM = maxRPM;
+		}
+		if(currentGear == 0){
+			engineRPM = disengagedEngineRPM;
 		}
 		
 		//Calcular torque desde la curva.
-		float engineTorque = torqueCurve.Evaluate (engineRPM);
-		float drive = throttle * (clutch + 1) / 2;
-		float driveTorque =  drive * engineTorque * gearRatios [currentGear] * finalGearRatio * transmissionEfficiency;	
+		float engineTorque = torqueCurve.Evaluate (engineRPM) * throttle;
+		float driveTorque =  engineTorque * gearRatios[currentGear] * finalGearRatio * (1 - clutch) * transmissionEfficiency;
+		if(currentGear == 7){
+			driveTorque *= -1;
+		}
 
 		return driveTorque;
 	}
 
-	void ApplyBrakes(){
+	private void ApplyBrakes(){
 		foreach (WheelCollider wheel in wheelColliders) {
 			float brakeForce = brakingForce * brake;
-			float engineBrake = (1 - throttle) * engineRPM * 0.74f * gearRatios [currentGear] * finalGearRatio * transmissionEfficiency;
-			wheel.brakeTorque =  brakeForce * engineBrake;
+			wheel.brakeTorque =  brakeForce;
 		}
 	}
 
 	void Update(){
 		UpdateWheelMeshesPositions ();
+		driveTorque = CalculateWheelTorque ();
+		if(engineRPM >= maxRPM - 10){
+			driveTorque = 0;
+		}
+		if(engineRPM < minRPM - 200){
+			ShiftTo(0);
+		}
 	}
+
 	void FixedUpdate () {
 		ApplyBrakes ();
 		
-		//pasar torque a las ruedas
-		float driveTorque = CalculateWheelTorque ();
-		
 		//Diferencial: TO DO, considerado en el desarrollo de la direccion
 		wheelColliders[0].motorTorque = driveTorque/2;
 		wheelColliders[1].motorTorque = driveTorque/2;
@@ -144,82 +172,6 @@ public class Powertrain : MonoBehaviour {
 		wheelColliders [1].steerAngle = steering; 
 	}
 
-	/*
-	void FixedUpdate () {
-		//Calculando el torque con la ayuda de las formulas obtenidas desde:
-		//http://www.asawicki.info/Mirror/Car%20Physics%20for%20Games/Car%20Physics%20for%20Games.html
-		//http://forum.unity3d.com/threads/how-to-add-clutch-setting-in-truck-physics.65884/
-
-		float wheelRPM = (wheelColliders [0].rpm + wheelColliders [1].rpm) / 2;
-
-		//RPM del motor cuando el embrague esta desactivado
-		float disengagedEngineRPM = wheelRPM * finalGearRatio * gearRatios [currentGear];
-
-		//RPM del motor cuando el embrague esta completamente activado == 1 (o en neutro)
-		float engagedEngineRPM = engineInertia * throttle + engineRPM;
-
-
-		//RPM del motor dependiendo del estado del embrague
-		engineRPM = (1 - clutch) * engagedEngineRPM + clutch * disengagedEngineRPM;
-
-		if (currentGear == 0) {
-			engineRPM = engagedEngineRPM;
-		}
-
-
-		if (engineRPM < minRPM) {
-			//mantener RPM de ralenti en los casos necesarios
-			if (clutch == 0 || currentGear == 0)
-				engineRPM = minRPM;
-			else if (clutch < 0.9)
-				;//AQUI SE PUEDE DETENER EL MOTOR
-		} 
-		else if (engineRPM > maxRPM)
-			engineRPM = maxRPM;
-
-		
-		//Calcular torque desde la curva.
-		float engineTorque = torqueCurve.Evaluate (engineRPM);
-		print (engineRPM + ":" +engineTorque);
-		float drive = ((1 - clutch) + throttle) / 2;
-		float driveTorque =  clutch * engineTorque * gearRatios [currentGear] * finalGearRatio * transmissionEfficiency;
-		
-		
-		//pasar torque a las ruedas
-		//Diferencial: TO DO, considerado en el desarrollo de la direccion
-		wheelColliders[0].motorTorque = driveTorque/2;
-		wheelColliders[1].motorTorque = driveTorque/2;
-
-		//aplicar rotacion
-		wheelColliders [0].steerAngle = steering; 
-		wheelColliders [1].steerAngle = steering; 
-
-		// Cambios automaticos.
-		if (isAutomatic) {
-			if (engineRPM >= maxRPM)
-				ShiftUp ();
-			else if (engineRPM <= minRPM * 1.1f && currentGear > 2)
-				ShiftDown ();
-			if (throttle < 0 && engineRPM <= minRPM)
-				currentGear = (currentGear == 0 ? 2 : 0);
-		} 
-		//Cosas cambios manuales
-		if (!isAutomatic) {
-
-		}
-
-		//Aplicar Frenos
-		if (brake > 0) {
-			foreach (WheelCollider wheel in wheelColliders) {
-				wheel.brakeTorque = brakingForce * brake / wheelColliders.Length;
-			}
-		} else {
-			foreach (WheelCollider wheel in wheelColliders){
-				wheel.brakeTorque = 0;
-			}
-		}
-	}
-	*/
 	public void ShiftUp(){
 		if (currentGear < gearRatios.Length - 1)
 			currentGear++; 
@@ -228,14 +180,17 @@ public class Powertrain : MonoBehaviour {
 		if (currentGear > 0)
 			currentGear--;
 	}
-	public void ShiftTo(int targetGear){
-		if (clutch < 0.2) {
-			if (targetGear >= 0 && targetGear <= gearRatios.Length)
+	public bool ShiftTo(int targetGear){
+		if (clutch > 0.8) {
+			if (targetGear >= 0 && targetGear <= gearRatios.Length && currentGear != targetGear){
 				currentGear = targetGear;
+				return true;
+			}
 		}
-		else {
+		else if(currentGear != targetGear) {
 			currentGear = 0;
 		}
+		return false;
 	}
 	public int GetCurrentGear(){
 		return currentGear;
@@ -245,7 +200,7 @@ public class Powertrain : MonoBehaviour {
 		rpm = (int)engineRPM;
 		return rpm;
 	}
-	static public int GetCurrentSpeed(){
-		return Mathf.FloorToInt(rigidbody.velocity.magnitude * 3.6f);
+	public int GetCurrentSpeed(){
+		return Mathf.FloorToInt(this.GetComponent<Rigidbody>().velocity.magnitude * 3.6f);
 	}
 }
