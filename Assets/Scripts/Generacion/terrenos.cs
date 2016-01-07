@@ -14,14 +14,10 @@ using UnityEngine;
  *  4) Curvo 2
  *  5) Curvo 3
  *  6) Curvo 4
- *  7) Cruce T 1
- *  8) Cruce T 2
- * 	9) Cruce T 3
- * 10) Cruce T 4
  *  
  */
 
-public class terrenos : MonoBehaviour {
+public class Terrenos : MonoBehaviour {
 
 	public GameObject CruceX;
 	public GameObject rectaV;
@@ -30,138 +26,86 @@ public class terrenos : MonoBehaviour {
 	public GameObject Curva2;
 	public GameObject Curva3;
 	public GameObject Curva4;
-	public GameObject CruceT1;
-	public GameObject CruceT2;
-	public GameObject CruceT3;
-	public GameObject CruceT4;
 	public GameObject Auto;
 	public string Archivo;
 
+	public GameObject Pare;
+	public GameObject SedaElPaso;
+	public GameObject NoEntrar;
+	public GameObject NoVirarDerecha;
+	public GameObject NoVirarIzquierda;
+	public GameObject DireccionObligadaDerecha;
+	public GameObject DireccionObligadaIzquierda;
+
 	private GameObject InstanciaAuto;
-	private GameObject[] TerrenosGenerados;
-	private Dictionary<string, string>[] Terrenos;
-	private ArrayList Historial = new ArrayList();
+	private GameObject[] InstanciasTerrenos;
+	private int[][] Historial;	//[BloqueX, BloqueY, CaminoExtra?, CaminoUsado?, CaminoEliminado?]
+	private Dictionary<string, string>[] DatosTerrenos;
 	private int[] dirContrarias;
 
-	private int contadorGenerados;
-	private int contadorLeidos;
-	private int totalTerrenos;
-
+	private int terrenosInstanciados;
+	private int terrenosLeidos;
+	private int terrenosTotales;
 
 	private int BloqueX;
 	private int BloqueZ;
+
 	private int direccionEntrada;
 	private int direccionSalida;
 
-	private int terrenosRepetidos;
-	private int totalRepeticiones;
-	private int contadorRepeticiones;
 	private bool cambioTerreno;
-	private bool siguienteGenerado;
-	private bool generacionActiva;
-	private Vector3 posicionAnterior;
-
-	//Largo de los arreglos de Terrenos y TerrenosGenerados
-	private const int TotalElementos = 30;
 	
-
 	void Start () {
-		//Inicializar variables dinamicas
-		Terrenos = new Dictionary<string, string>[TotalElementos];
-		TerrenosGenerados = new GameObject[TotalElementos];
+		//Inicializar variables y estructuras
+		InstanciasTerrenos = new GameObject[30];
+		Historial = new int[30][];
+		DatosTerrenos = new Dictionary<string, string>[30];
 		dirContrarias = new int[4] { 1, 0, 3, 2 };
 
-		//Establecer variables iniciales
-		contadorGenerados = 0;
-		contadorLeidos = 1;
-		totalTerrenos = 0;
-
 		BloqueX = 0;
-		BloqueZ = 0;
-		direccionEntrada = 1;
-		direccionSalida = 0;
-
-		terrenosRepetidos = 0;
-		totalRepeticiones = 1;
-		contadorRepeticiones = totalRepeticiones;
+		BloqueZ = -1;
+		terrenosInstanciados = 0;
+		terrenosLeidos = 0;
+		terrenosTotales = 0;
 		cambioTerreno = false;
-		generacionActiva = true;
-		siguienteGenerado = false;
 
 		//Lectura y guardado de informacion de terrenos
 		LeerArchivoConfiguracion (Archivo);
-
+		
 		//Instanciar terreno inicial
-		generarNuevoTerreno(1, BloqueX, BloqueZ);
+		LeerSiguienteTerreno ();
 
 		//Instanciar Automovil
 		InstanciaAuto = Instantiate (Auto, new Vector3 (252, 0.2f,480), Quaternion.identity) as GameObject;
-		posicionAnterior = InstanciaAuto.transform.position;
 	}
 	
-
 	void Update () {
-		Vector3 target = InstanciaAuto.transform.position - posicionAnterior;
-		posicionAnterior = InstanciaAuto.transform.position;
-
-		int anteriorX = ((int[])Historial[contadorGenerados-1])[0];
-		int anteriorZ = ((int[])Historial[contadorGenerados-1])[1];
+		//Posicion Automovil
 		float x = InstanciaAuto.transform.position.x;
 		float z = InstanciaAuto.transform.position.z;
-
-		//Detectar automovil en el terreno actual
-		if(z >= anteriorZ * 500 && z <= (anteriorZ + 1) * 500 && x >= anteriorX * 500 && x <= (anteriorX + 1) * 500){
+		
+		//Verifica si el automovil se sale del terreno actual
+		if(z >= (BloqueZ + 1) * 500){
+			direccionSalida = 0;
 			cambioTerreno = true;
 		}
-		else { //sale del terreno actual
+		else if(z <= BloqueZ * 500){
+			direccionSalida = 1;
+			cambioTerreno = true;
+		}
+		else if(x <= BloqueX * 500){
+			direccionSalida = 2;
+			cambioTerreno = true;
+		}
+		else if(x >= (BloqueX + 1) * 500){
+			direccionSalida = 3;
+			cambioTerreno = true;
+		}
+		else {
 			cambioTerreno = false;
-			siguienteGenerado = false;
 		}
 
-
-		if(cambioTerreno && !siguienteGenerado && generacionActiva){
-			//print (direccionEntrada.ToString() + " - " + direccionSalida.ToString()); //aaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-			//Leer datos del terreno que se va a generar
-			int tipo = Int32.Parse(Terrenos [contadorLeidos] ["tipo"]);
-			direccionEntrada = dirContrarias[direccionSalida];
-			direccionSalida = Int32.Parse(Terrenos [contadorLeidos] ["direccion"]);
-			totalRepeticiones = Int32.Parse(Terrenos [contadorLeidos] ["repeticiones"]);
-			contadorRepeticiones = totalRepeticiones;
-
-			cambioTerreno = true;
-			siguienteGenerado = true;
-
-			//print (direccionEntrada.ToString() + " + " + direccionSalida.ToString()); //aaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-			//En caso de un cruce generar demas posibilidades
-			if (Terrenos [contadorLeidos-1] ["tipo"].Equals("0")) {
-				print ("Generacion multimple en Cruce");
-				for (int i = 0; i < 4; i++) {
-					if(i != direccionEntrada && i != direccionSalida) {
-						switch (i)
-						{
-						case 0:
-							generarNuevoTerreno(0, BloqueX, BloqueZ + 1);
-							break;
-						case 1:
-							generarNuevoTerreno(0, BloqueX, BloqueZ - 1);
-							break;
-						case 2:
-							generarNuevoTerreno(0, BloqueX - 1, BloqueZ);
-							break;
-						case 3:
-							generarNuevoTerreno(0, BloqueX + 1, BloqueZ);
-							break;
-						default:
-							print("Error: Direccion no identificada");
-							break;
-						}
-					}
-				}
-			}
-			contadorLeidos++;
-
+		if(cambioTerreno){
 			switch (direccionSalida)
 			{
 			case 0:
@@ -180,81 +124,189 @@ public class terrenos : MonoBehaviour {
 				print("Error: Direccion no identificada");
 				break;
 			}
-			generarNuevoTerreno(tipo, BloqueX, BloqueZ);
 
+			if (Int32.Parse(DatosTerrenos [terrenosLeidos-1] ["direccion"]) != direccionSalida){
+				terrenosLeidos--;
+			}
+			LeerSiguienteTerreno();
+		}
+	}
+
+	void LeerSiguienteTerreno(){
+		//Leer datos del terreno que se va a generar
+		int tipo = Int32.Parse(DatosTerrenos [terrenosLeidos] ["tipo"]);
+		int direccionCorrecta = Int32.Parse(DatosTerrenos [terrenosLeidos] ["direccion"]);
+
+		terrenosLeidos++;
+		cambioTerreno = false;
+
+		int tempX = BloqueX;
+		int tempZ = BloqueZ;
+		switch (direccionCorrecta)
+		{
+		case 0:
+			tempZ += 1;
+			break;
+		case 1:
+			tempZ -= 1;
+			break;
+		case 2:
+			tempX -= 1;
+			break;
+		case 3:
+			tempX += 1;
+			break;
+		default:
+			print("Error: Direccion no identificada");
+			break;
+		}
+
+		GenerarNuevoTerreno(tipo, tempX, tempZ, 0);
+
+		//En caso de un cruce generar demas posibilidades
+		try {
+			if (DatosTerrenos [terrenosLeidos-2] ["tipo"].Equals("0")) {
+				direccionCorrecta = Int32.Parse(DatosTerrenos [terrenosLeidos] ["direccion"]);
+				for (int i = 0; i < 4; i++) {
+					if(i != direccionCorrecta && i != dirContrarias[direccionSalida]) {
+						switch (i)
+						{
+						case 0:
+							GenerarNuevoTerreno(0, BloqueX, BloqueZ + 1, 1);
+							break;
+						case 1:
+							GenerarNuevoTerreno(0, BloqueX, BloqueZ - 1, 1);
+							break;
+						case 2:
+							GenerarNuevoTerreno(0, BloqueX - 1, BloqueZ, 1);
+							break;
+						case 3:
+							GenerarNuevoTerreno(0, BloqueX + 1, BloqueZ, 1);
+							break;
+						default:
+							print("Error: Direccion no identificada");
+							break;
+						}
+					}
+				}
+			}
+		} catch (Exception ex) {
 
 		}
 	}
 
-	void generarNuevoTerreno(int tipo, int x, int z){
+	void GenerarSenaleticas(){
+
+		foreach (var tipo in dirContrarias) {
+			switch (tipo)
+			{
+			case 0:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(CruceX, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: Cruce Completo -  X: " + x + " -  Z: " + z);
+				break;
+			case 1:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(rectaV, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: rectaV -  X: " + x + " -  Z: " + z);
+				break;
+			case 2:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(rectaH, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: rectaH -  X: " + x + " -  Z: " + z);
+				break;
+			case 3:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva1, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: Curva1 -  X: " + x + " -  Z: " + z);
+				break;
+			case 4:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva2, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: Curva2 -  X: " + x + " -  Z: " + z);
+				break;
+			case 5:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva3, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: Curva3 -  X: " + x + " -  Z: " + z);
+				break;
+			case 6:
+				InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva4, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+				print("Generacion: Curva4 -  X: " + x + " -  Z: " + z);
+				break;
+			default:
+				print("Error: Terreno no identificado; no se puede cargar ningun Prefab");
+				break;
+			}
+		}
+	}
+
+	void GenerarNuevoTerreno(int tipo, int x, int z, int extra){
 		switch (tipo)
 		{
 		case 0:
-			TerrenosGenerados[contadorGenerados] = Instantiate(CruceX, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Cruce Completo");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(CruceX, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: Cruce Completo -  X: " + x + " -  Z: " + z);
 			break;
 		case 1:
-			TerrenosGenerados[contadorGenerados] = Instantiate(rectaV, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: rectaV");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(rectaV, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: rectaV -  X: " + x + " -  Z: " + z);
 			break;
 		case 2:
-			TerrenosGenerados[contadorGenerados] = Instantiate(rectaH, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: rectaH");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(rectaH, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: rectaH -  X: " + x + " -  Z: " + z);
 			break;
 		case 3:
-			TerrenosGenerados[contadorGenerados] = Instantiate(Curva1, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Curva1");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva1, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: Curva1 -  X: " + x + " -  Z: " + z);
 			break;
 		case 4:
-			TerrenosGenerados[contadorGenerados] = Instantiate(Curva2, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Curva2");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva2, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: Curva2 -  X: " + x + " -  Z: " + z);
 			break;
 		case 5:
-			TerrenosGenerados[contadorGenerados] = Instantiate(Curva3, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Curva3");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva3, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: Curva3 -  X: " + x + " -  Z: " + z);
 			break;
 		case 6:
-			TerrenosGenerados[contadorGenerados] = Instantiate(Curva4, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Curva4");
-			break;
-		case 7:
-			TerrenosGenerados[contadorGenerados] = Instantiate(CruceT1, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Cruce T 1");
-			break;
-		case 8:
-			TerrenosGenerados[contadorGenerados] = Instantiate(CruceT2, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Cruce T 2");
-			break;
-		case 9:
-			TerrenosGenerados[contadorGenerados] = Instantiate(CruceT3, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Cruce T 3");
-			break;
-		case 10:
-			TerrenosGenerados[contadorGenerados] = Instantiate(CruceT4, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-			print("Generacion: Cruce T 4");
+			InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva4, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
+			print("Generacion: Curva4 -  X: " + x + " -  Z: " + z);
 			break;
 		default:
 			print("Error: Terreno no identificado; no se puede cargar ningun Prefab");
 			break;
 		}
 
-		//Guarda configuracion del terreno anteriormente generado
-		Historial.Add(new int[] { x, z, direccionEntrada, direccionSalida });
-		contadorGenerados++;
+		//Eliminar terrenos sobrepuestos
+		for (int i = 0; i < terrenosInstanciados; i++) {
+			if(Historial[i][0] == x && Historial[i][1] == z && Historial[i][4] != 1){
+				Destroy (InstanciasTerrenos[i], 1.0f);
+				Historial[i][4] = 1;
+				break;
+			}
+		}
 
-		/*if(ContadorGenerados - 2 >= 0)
-			Destroy (TerrenosGenerados[ContadorGenerados - 2], 1.0f);*/
-		if (contadorLeidos >= totalTerrenos + terrenosRepetidos){
-			generacionActiva = false;
-			print ("Generacion de Caminos Finalizada");
+		Historial[terrenosInstanciados] = new int[] { x, z, extra, 0 , 0};
+		terrenosInstanciados++;
+
+		if(terrenosInstanciados - 8 >= 0 && Historial[terrenosInstanciados - 8][4] != 1){
+			Destroy (InstanciasTerrenos[terrenosInstanciados - 8], 1.0f);
+			Historial[terrenosInstanciados - 8][4] = 1;
 		}
 	}
 
+	bool SobreTerreno(int num_terreno, int x, int z){
+		if(z >= BloqueZ * 500 && z <= (BloqueZ + 1) * 500 && x >= BloqueX * 500 && x <= (BloqueX + 1) * 500){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
 	void LeerArchivoConfiguracion(string nameFile)
 	{
-		Terrenos[totalTerrenos] = new Dictionary<string, string>(){{"tipo", "1"},{"nombre", "Recto Vertical"},{"direccion", "0"}};
-		totalTerrenos++;
+
+	}
+	
+	void LeerArchivoConfiguracion2(string nameFile)
+	{
+		DatosTerrenos[terrenosTotales] = new Dictionary<string, string>(){{"tipo", "1"},{"nombre", "Recto Vertical"},{"direccion", "0"}};
+		terrenosTotales++;
 
 		string line;
 		var dictionary = new Dictionary<string, string>();
@@ -265,9 +317,15 @@ public class terrenos : MonoBehaviour {
 				dictionary = new Dictionary<string, string>();
 				continue;
 			}
+			else if (line.Equals("	\"segmentos\":[")) {
+				if(line.Equals("{")){
+				dictionary = new Dictionary<string, string>();
+				continue;
+			}
+			}
 			else if(line.Equals("}")){
-				Terrenos[totalTerrenos] = dictionary;
-				totalTerrenos++;
+				DatosTerrenos[terrenosTotales] = dictionary;
+				terrenosTotales++;
 				continue;
 			}
 			else{
@@ -276,14 +334,16 @@ public class terrenos : MonoBehaviour {
 				dictionary.Add(words[0], words[1]);
 			}
 		}
-
+		
 		file.Close();
 	}
-
-
-
-
-
-
-
+	
+	IEnumerator Start() {
+		GET datos = new GET("http://claseb.dribyte.cl/api/v1/mapa");
+		Debug.Log(request.get_data());
+	}
 }
+
+
+
+
