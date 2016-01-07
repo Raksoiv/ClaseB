@@ -16,22 +16,22 @@ public class MapGenerator : MonoBehaviour {
 	// Private Variables
 
 	// Mapa Importado
-	Mapa map;
+	// Mapa map;
 
 	//Offset de Generacion
-	float offsetX;
-	float offsetZ;
+	// float offsetX;
+	// float offsetZ;
 
 	// Use this for initialization
 	void Start () {
 		// Get the JSON File and Instantiate 
-		map = Mapa.CreateFromJSON ("{\"segmentos\":[{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Cruce\",\"signs\":[\"Pare\"]},{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Cruce\",\"signs\":[\"Pare\"]}]}");
+		// map = Mapa.CreateFromJSON ("{\"segmentos\":[{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Cruce\",\"signs\":[\"Pare\"]},{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Recto\",\"signs\":[]},{\"type\":\"Cruce\",\"signs\":[\"Pare\"]}]}");
 		Instantiate (car, new Vector3 (0, 0, -1.5f), Quaternion.Euler (0, 90, 0));
 		prefabs.Add (Instantiate (streets[0], Vector3.zero, Quaternion.identity));
 
 		//Set initial Offset
-		offsetX = 20;
-		offsetZ = 0;
+		// offsetX = 20;
+		// offsetZ = 0;
 	}
 	
 	// Update is called once per frame

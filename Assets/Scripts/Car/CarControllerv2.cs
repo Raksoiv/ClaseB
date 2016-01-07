@@ -63,7 +63,9 @@ public class CarControllerv2 : MonoBehaviour {
 		timeToSendData += Time.deltaTime;
 		timeToEnd += Time.deltaTime;
 		if (timeToEnd > 120) {
-			API.finalizarSesion ();
+			//API.finalizarSesion ();
+			//API v2
+			APIv2.EndSession ();
 			SceneManager.LoadScene ("MenuPrincipal");
 		}
 		SendDataVelocity ();
@@ -101,19 +103,33 @@ public class CarControllerv2 : MonoBehaviour {
 				powertrain.Steering = finalAngle;
 
 				if (LogitechGSDK.LogiButtonTriggered (0, 8)) {
-					powertrain.ShiftTo (1);
+					if (powertrain.ShiftTo (1)){
+						SendDataCambios ();
+					}
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 9)) {
-					powertrain.ShiftTo (2);
+					if (powertrain.ShiftTo (2)) {
+						SendDataCambios ();
+					}
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 10)) {
-					powertrain.ShiftTo (3);
+					if (powertrain.ShiftTo (3)) {
+						SendDataCambios ();
+					}
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 11)) {
-					powertrain.ShiftTo (4);
+					if (powertrain.ShiftTo (4)) {
+						SendDataCambios ();
+					}
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 12)) {
-					powertrain.ShiftTo (5);
+					if (powertrain.ShiftTo (5)) {
+						SendDataCambios ();
+					}
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 13)) {
-					powertrain.ShiftTo (6);
+					if (powertrain.ShiftTo (6)) {
+						SendDataCambios ();
+					}
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 14)) {
-					powertrain.ShiftTo (7);
+					if (powertrain.ShiftTo (7)) {
+						SendDataCambios ();
+					}
 				} else if (rec.rgbButtons [8] != 128 &&
 				           rec.rgbButtons [9] != 128 &&
 				           rec.rgbButtons [10] != 128 &&
@@ -121,9 +137,7 @@ public class CarControllerv2 : MonoBehaviour {
 				           rec.rgbButtons [12] != 128 &&
 				           rec.rgbButtons [13] != 128 &&
 				           rec.rgbButtons [14] != 128) {
-					if (powertrain.ShiftTo (0)) {
-						SendDataCambios ();
-					}
+					powertrain.ShiftTo (0);
 				}
 
 				if (LogitechGSDK.LogiButtonTriggered (0, 6)) {
@@ -164,7 +178,9 @@ public class CarControllerv2 : MonoBehaviour {
 	void SendDataVelocity(){
 		if (timeToSendData > 5) {
 			float speed = GetComponent<Rigidbody> ().velocity.magnitude * 3.6f;
-			API.registrarVelocidad(speed);
+			//API.registrarVelocidad(speed);
+			//API v2
+			APIv2.RegisterVelocity (speed);
 			//Debug.Log("Speed: "+speed.ToString());
 			timeToSendData = 0;
 		}
@@ -172,10 +188,12 @@ public class CarControllerv2 : MonoBehaviour {
 
 	void SendDataCambios(){
 		float speed = Mathf.RoundToInt (GetComponent<Rigidbody> ().velocity.magnitude * 3.6f);
-		int rpm = powertrain.GetRPMS(1);
-		Debug.Log ("RPM: " + rpm.ToString ());
+		int rpm = powertrain.GetCurrentEngagedRPM();
+		//Debug.Log ("RPM: " + rpm.ToString ());
 		int gear = (powertrain.GetCurrentGear () == 7) ? 0 : powertrain.GetCurrentGear ();
-		API.registrarCambio(speed, rpm, gear);
+		//API.registrarCambio(speed, rpm, gear);
+		//API v2
+		APIv2.RegisterGearUp(speed, rpm, gear);
 		//Debug.Log("Velocidad: "+speed.ToString()+" RPM: "+rpm.ToString()+" Gear: "+gear.ToString());
 	}
 
