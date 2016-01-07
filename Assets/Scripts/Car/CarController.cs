@@ -4,7 +4,7 @@
 //Requiere componente Drivetrain en el actor.
 
 public class CarController : MonoBehaviour {
-	[SerializeField]private bool isAutomatic = false;							
+	// [SerializeField]private bool isAutomatic = false;							
 
 	public Transform steeringWheel;
 	private bool debugGUI = true;
