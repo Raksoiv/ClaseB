@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Net;
+using System.Text;
 
 /*
  * Tipos de Caminos:
@@ -21,12 +23,7 @@ public class Generacion : MonoBehaviour {
     public GameObject CruceX;
     public GameObject rectaV;
     public GameObject rectaH;
-    public GameObject Curva1;
-    public GameObject Curva2;
-    public GameObject Curva3;
-    public GameObject Curva4;
     public GameObject Auto;
-    public string Archivo;
 
     public GameObject Pare;
     public GameObject SedaElPaso;
@@ -69,8 +66,18 @@ public class Generacion : MonoBehaviour {
         terrenosTotales = 0;
         cambioTerreno = false;
 
-        //Lectura y guardado de informacion de terrenos
-        LeerArchivoConfiguracion(Archivo);
+
+        //Descarga y lectura de informacion de terrenos
+        string mapa = requestHTTP("http://claseb.dribyte.cl/api/v1/mapa");
+        TransformarMapa(mapa);
+
+        /*for (int i = 0; i < DatosTerrenos.Length; i++)
+        {
+            print(DatosTerrenos[i]["tipo"]);
+            print(DatosTerrenos[i]["nombre"]);
+            print(DatosTerrenos[i]["direccion"]);
+            print(DatosTerrenos[i]["senales"]);
+        }*/
 
         //Instanciar terreno inicial
         LeerSiguienteTerreno();
@@ -112,6 +119,7 @@ public class Generacion : MonoBehaviour {
 
         if (cambioTerreno)
         {
+            print(direccionSalida);
             switch (direccionSalida)
             {
                 case 0:
@@ -131,7 +139,8 @@ public class Generacion : MonoBehaviour {
                     break;
             }
 
-            if (Int32.Parse(DatosTerrenos[terrenosLeidos - 1]["direccion"]) != direccionSalida)
+            int temp = TransformarDireccion(DatosTerrenos[terrenosLeidos-1]["direccion"]);
+            if (temp != direccionSalida)
             {
                 terrenosLeidos--;
             }
@@ -139,44 +148,98 @@ public class Generacion : MonoBehaviour {
         }
     }
 
+    int TransformarDireccion(string sentido)
+    {
+        int dirCorrecta = -1;
+        switch (dirContrarias[direccionSalida])
+        {
+            case 0:
+                if (sentido.Equals("Izquierda"))
+                    dirCorrecta = 3;
+                else if (sentido.Equals("Derecha"))
+                    dirCorrecta = 2;
+                else
+                    dirCorrecta = direccionSalida;
+                break;
+            case 1:
+                if (sentido.Equals("Izquierda"))
+                    dirCorrecta = 2;
+                else if (sentido.Equals("Derecha"))
+                    dirCorrecta = 3;
+                else
+                    dirCorrecta = direccionSalida;
+                break;
+            case 2:
+                if (sentido.Equals("Izquierda"))
+                    dirCorrecta = 0;
+                else if (sentido.Equals("Derecha"))
+                    dirCorrecta = 1;
+                else
+                    dirCorrecta = direccionSalida;
+                break;
+            case 3:
+                if (sentido.Equals("Izquierda"))
+                    dirCorrecta = 1;
+                else if (sentido.Equals("Derecha"))
+                    dirCorrecta = 0;
+                else
+                    dirCorrecta = direccionSalida;
+                break;
+            default:
+                break;
+        }
+        
+        
+        return dirCorrecta;
+    }
+
     void LeerSiguienteTerreno()
     {
         //Leer datos del terreno que se va a generar
         int tipo = Int32.Parse(DatosTerrenos[terrenosLeidos]["tipo"]);
-        int direccionCorrecta = Int32.Parse(DatosTerrenos[terrenosLeidos]["direccion"]);
+        int direccionCorrecta = TransformarDireccion(DatosTerrenos[terrenosLeidos]["direccion"]);
 
         terrenosLeidos++;
         cambioTerreno = false;
 
         int tempX = BloqueX;
         int tempZ = BloqueZ;
+        int cambio = 0;
         switch (direccionCorrecta)
         {
             case 0:
                 tempZ += 1;
+                cambio = 1;
                 break;
             case 1:
                 tempZ -= 1;
+                cambio = 1;
                 break;
             case 2:
                 tempX -= 1;
+                cambio = 2;
                 break;
             case 3:
                 tempX += 1;
+                cambio = 2;
                 break;
             default:
                 print("Error: Direccion no identificada");
                 break;
         }
 
-        GenerarNuevoTerreno(tipo, tempX, tempZ, 0);
+        if (tipo == 0)
+            GenerarNuevoTerreno(tipo, tempX, tempZ, 0);
+        else
+            GenerarNuevoTerreno(cambio, tempX, tempZ, 0);
+        
 
         //En caso de un cruce generar demas posibilidades
         try
         {
             if (DatosTerrenos[terrenosLeidos - 2]["tipo"].Equals("0"))
             {
-                direccionCorrecta = Int32.Parse(DatosTerrenos[terrenosLeidos]["direccion"]);
+                //direccionCorrecta = TransformarDireccion(DatosTerrenos[terrenosLeidos]["direccion"]);
                 for (int i = 0; i < 4; i++)
                 {
                     if (i != direccionCorrecta && i != dirContrarias[direccionSalida])
@@ -230,22 +293,6 @@ public class Generacion : MonoBehaviour {
                     InstanciasTerrenos[terrenosInstanciados] = Instantiate(rectaH, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
                     print("Generacion: rectaH -  X: " + x + " -  Z: " + z);
                     break;
-                case 3:
-                    InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva1, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                    print("Generacion: Curva1 -  X: " + x + " -  Z: " + z);
-                    break;
-                case 4:
-                    InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva2, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                    print("Generacion: Curva2 -  X: " + x + " -  Z: " + z);
-                    break;
-                case 5:
-                    InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva3, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                    print("Generacion: Curva3 -  X: " + x + " -  Z: " + z);
-                    break;
-                case 6:
-                    InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva4, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                    print("Generacion: Curva4 -  X: " + x + " -  Z: " + z);
-                    break;
                 default:
                     print("Error: Terreno no identificado; no se puede cargar ningun Prefab");
                     break;
@@ -269,22 +316,6 @@ public class Generacion : MonoBehaviour {
                 InstanciasTerrenos[terrenosInstanciados] = Instantiate(rectaH, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
                 print("Generacion: rectaH -  X: " + x + " -  Z: " + z);
                 break;
-            case 3:
-                InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva1, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                print("Generacion: Curva1 -  X: " + x + " -  Z: " + z);
-                break;
-            case 4:
-                InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva2, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                print("Generacion: Curva2 -  X: " + x + " -  Z: " + z);
-                break;
-            case 5:
-                InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva3, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                print("Generacion: Curva3 -  X: " + x + " -  Z: " + z);
-                break;
-            case 6:
-                InstanciasTerrenos[terrenosInstanciados] = Instantiate(Curva4, new Vector3(x * 500, 0, z * 500), Quaternion.identity) as GameObject;
-                print("Generacion: Curva4 -  X: " + x + " -  Z: " + z);
-                break;
             default:
                 print("Error: Terreno no identificado; no se puede cargar ningun Prefab");
                 break;
@@ -304,10 +335,11 @@ public class Generacion : MonoBehaviour {
         Historial[terrenosInstanciados] = new int[] { x, z, extra, 0, 0 };
         terrenosInstanciados++;
 
-        if (terrenosInstanciados - 8 >= 0 && Historial[terrenosInstanciados - 8][4] != 1)
+        int DL = 10;
+        if (terrenosInstanciados - DL >= 0 && Historial[terrenosInstanciados - DL][4] != 1)
         {
-            Destroy(InstanciasTerrenos[terrenosInstanciados - 8], 1.0f);
-            Historial[terrenosInstanciados - 8][4] = 1;
+            Destroy(InstanciasTerrenos[terrenosInstanciados - DL], 5.0f);
+            Historial[terrenosInstanciados - DL][4] = 1;
         }
     }
 
@@ -322,48 +354,123 @@ public class Generacion : MonoBehaviour {
         }
     }
 
-    void LeerArchivoConfiguracion(string nameFile)
+    int getNombre(string nombre)
     {
-
+        int retorno = -1;
+        switch (nombre)
+        {
+            case "Cruce":
+                retorno = 0;
+                break;
+            case "Recto Vertical":
+                retorno = 1;
+                break;
+            case "Recto Horizontal":
+                retorno = 1;
+                break;
+            default:
+                break;
+        }
+        return retorno;
     }
 
-    void LeerArchivoConfiguracion2(string nameFile)
+    void TransformarMapa(string mapa)
     {
-        DatosTerrenos[terrenosTotales] = new Dictionary<string, string>() { { "tipo", "1" }, { "nombre", "Recto Vertical" }, { "direccion", "0" } };
+        //{"segmentos":[
+        //{ "type":"Recto","senales":[]},
+        //{ "type":"Cruce","senales":[],"direccion":"Derecha"},
+        //{ "type":"Recto","senales":[]},
+        //{ "type":"Cruce","senales":[],"direccion":"Izquierda"}]}
+
+        DatosTerrenos[terrenosTotales] = new Dictionary<string, string>() { { "tipo", "1" }, { "nombre", "Recto" }, { "direccion", "Adelante" }, { "senales", "" } };
         terrenosTotales++;
 
-        string line;
         var dictionary = new Dictionary<string, string>();
 
-        System.IO.StreamReader file = new System.IO.StreamReader("Estadisticas/" + nameFile);
-        while ((line = file.ReadLine()) != null)
+        mapa = mapa.Substring(15, (int)mapa.Length-18);
+        mapa = mapa.Replace("},{", "&");
+        
+        string[] partes = mapa.Split('&');
+        foreach (var item in partes)
         {
-            if (line.Equals("{"))
+            dictionary = new Dictionary<string, string>();
+
+            //Agregar Tipo
+            if (item.IndexOf("Recto") != -1)
             {
-                dictionary = new Dictionary<string, string>();
-                continue;
+                dictionary.Add("tipo", "1");
+                dictionary.Add("nombre", "Recto");
             }
-            else if (line.Equals("	\"segmentos\":["))
+            else
             {
-                if (line.Equals("{"))
+                dictionary.Add("tipo", "0");
+                dictionary.Add("nombre", "Cruce");
+            }
+
+            //Agregar Direccion
+            if (item.IndexOf("direccion") != -1)
+            {
+                if (item.IndexOf("Adelante") == -1)
                 {
-                    dictionary = new Dictionary<string, string>();
-                    continue;
+                    if (item.IndexOf("Izquierda") == -1)
+                    {
+                        dictionary.Add("direccion", "Derecha");
+                    }
+                    else
+                    {
+                        dictionary.Add("direccion", "Izquierda");
+                    }
+                }
+                else
+                {
+                    dictionary.Add("direccion", "Adelante");
                 }
             }
-            else if (line.Equals("}"))
+            else
             {
-                DatosTerrenos[terrenosTotales] = dictionary;
-                terrenosTotales++;
-                continue;
+                dictionary.Add("direccion", "Adelante");
             }
-            else {
-                line = line.Replace(",", "").Replace("\"", "").Replace(": ", ":").Replace("\t", "");
-                string[] words = line.Split(':');
-                dictionary.Add(words[0], words[1]);
+
+
+            //Agregar Senaleticas
+            if (item.IndexOf("senales") != -1)
+            {
+                string senales = item.Substring(item.IndexOf("[") + 1, item.IndexOf("]") - item.IndexOf("[") - 1);
+                senales = senales.Replace("\"", "");
+                dictionary.Add("senales", senales);
             }
+            else
+            {
+                dictionary.Add("senales", "");
+            }
+
+            DatosTerrenos[terrenosTotales] = dictionary;
+            terrenosTotales++;
+        }
+    }
+
+    string requestHTTP(string pagina)
+    {
+        string responseFromServer = "";
+        try
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(pagina);
+
+            WebResponse response = request.GetResponse();
+            Stream dataStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(dataStream);
+            responseFromServer = reader.ReadToEnd();
+            Debug.Log(responseFromServer);
+
+            reader.Close();
+            dataStream.Close();
+            response.Close();
+        }
+        catch (Exception e)
+        {
+            responseFromServer = e.Message;
         }
 
-        file.Close();
+        return responseFromServer;
     }
 }

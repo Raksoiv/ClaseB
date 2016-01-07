@@ -112,22 +112,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46f069a1b8274154f97229d238fbf6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CruceX: {fileID: 0}
-  rectaV: {fileID: 0}
-  rectaH: {fileID: 0}
-  Curva1: {fileID: 0}
-  Curva2: {fileID: 0}
-  Curva3: {fileID: 0}
-  Curva4: {fileID: 0}
-  Auto: {fileID: 0}
-  Archivo: 
-  Pare: {fileID: 0}
-  SedaElPaso: {fileID: 0}
-  NoEntrar: {fileID: 0}
-  NoVirarDerecha: {fileID: 0}
-  NoVirarIzquierda: {fileID: 0}
-  DireccionObligadaDerecha: {fileID: 0}
-  DireccionObligadaIzquierda: {fileID: 0}
+  CruceX: {fileID: 109640, guid: 6ca8b8f121560ac438562a28365fc2d3, type: 2}
+  rectaV: {fileID: 144696, guid: de3d8509b00e1ed4899c126aa093fd0d, type: 2}
+  rectaH: {fileID: 186890, guid: ae8c96797be4424438a0ad289c4d5d59, type: 2}
+  Auto: {fileID: 186252, guid: 53845fdf870903749a20bf2a77b63fe2, type: 2}
+  Pare: {fileID: 141462, guid: 0609c952fc9112d4291e8c7cba09f863, type: 2}
+  SedaElPaso: {fileID: 136970, guid: fb1c4250bc5891447a2f0789ff8bd61b, type: 2}
+  NoEntrar: {fileID: 155186, guid: 7325c0e2c0fe07d449ffb96f314eced0, type: 2}
+  NoVirarDerecha: {fileID: 118212, guid: 0a0607bb03179f44ea6da87f21be1969, type: 2}
+  NoVirarIzquierda: {fileID: 176494, guid: d60adf7582b017f4eab6bb39d77b6c04, type: 2}
+  DireccionObligadaDerecha: {fileID: 146090, guid: 2ebecc32d9c5fc544890d65a0a27a249,
+    type: 2}
+  DireccionObligadaIzquierda: {fileID: 184272, guid: b60db3896e62ac343b9aed5d4128a0c9,
+    type: 2}
 --- !u!4 &209583377
 Transform:
   m_ObjectHideFlags: 0
