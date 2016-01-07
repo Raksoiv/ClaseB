@@ -18,7 +18,9 @@ public class Powertrain : MonoBehaviour {
 	[SerializeField]private int brakingForce;										//Fuerza de Frenado (en Newtons)
 	[SerializeField]private int engineInertia;										//Inercia del motor ocupada para acelerar en neutro.
 	[SerializeField]private float transmissionEfficiency = 0.7f;					//Eficiencia del sistema de transmision
-	[SerializeField]private float Cmotor = .3f;														//Tasa de perdida de RPM del motor
+	[SerializeField]private float Cmotor = .3f;										//Tasa de perdida de RPM del motor
+
+	CarControllerv2 car;
 
 	private float driveTorque;
 
@@ -82,6 +84,7 @@ public class Powertrain : MonoBehaviour {
 
 	void Start(){
 		//rigidbody = GetComponent<Rigidbody> ();
+		car = GetComponent<CarControllerv2> ();
 	}
 
 	void UpdateWheelMeshesPositions(){
@@ -150,13 +153,17 @@ public class Powertrain : MonoBehaviour {
 	}
 
 	void Update(){
-		UpdateWheelMeshesPositions ();
-		driveTorque = CalculateWheelTorque ();
-		if(engineRPM >= maxRPM - 10){
-			driveTorque = 0;
-		}
-		if(engineRPM < minRPM - 200){
-			ShiftTo(0);
+		if (car.CarIsOn ()) {
+			UpdateWheelMeshesPositions ();
+			driveTorque = CalculateWheelTorque ();
+			if (engineRPM >= maxRPM - 10) {
+				driveTorque = 0;
+			}
+			if (engineRPM < minRPM - 200) {
+				ShiftTo (0);
+			}
+		} else {
+			engineRPM = 0;
 		}
 	}
 

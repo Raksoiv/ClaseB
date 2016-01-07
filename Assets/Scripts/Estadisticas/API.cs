@@ -15,7 +15,7 @@ public static class API {
     private static List<float> Velocidad = new List<float>();
     private static List<int> TiemposVelocidad = new List<int>();
 
-    private static List<int> TiemposFueraCarril = new List<int>();
+    private static List<float> TiemposFueraCarril = new List<float>();
     private static List<int> TiemposRegistroCarril = new List<int>();
 
     private static List<bool> UtilizaLuces = new List<bool>();
@@ -45,10 +45,11 @@ public static class API {
     }
 
     //Registra los tiempos del juego en que el alumno se sale del carril
-    public static void salidaCarril(int tiempo)
+    public static void salidaCarril(float tiempo)
     {
         if (sesionIniciada)
         {
+			Debug.Log (tiempo);
             TiemposFueraCarril.Add(tiempo);
             TiemposRegistroCarril.Add(timer());
         }
@@ -197,7 +198,7 @@ public static class API {
     private static WWWForm generarJSON(WWWForm form)
     {
         //Preparando variables
-        string fecha = DateTime.Now.ToString();
+        // string fecha = DateTime.Now.ToString();
         string itemVelocidad = "";
         string itemTiempo = "";
         string itemRuta = "";
@@ -206,8 +207,8 @@ public static class API {
         string itemFueraCarril = "";
 
         int tiempoTotalJuego = timer();
-        int tiempoFueraCarril = 0;
-        int tiempoDentroCarril = 0;
+        float tiempoFueraCarril = 0;
+        float tiempoDentroCarril = 0;
         int contador = 0;
         int velMedia = 0;
         int velMaxima = 0;
@@ -239,7 +240,7 @@ public static class API {
             itemRPMCambio += collection.ToString() + ",";
         itemRPMCambio = itemRPMCambio.Substring(0, itemRPMCambio.Length - 1);
 
-        foreach (int collection in TiemposFueraCarril)
+        foreach (float collection in TiemposFueraCarril)
         {
             itemFueraCarril += collection.ToString() + ",";
             tiempoFueraCarril += collection;
@@ -257,8 +258,8 @@ public static class API {
         form.AddField("estadisticas[cambiosVelocidad]", "[" + itemVelCambio + "]");
         form.AddField("estadisticas[cambiosRpm]", "[" + itemRPMCambio + "]");
         form.AddField("estadisticas[alumno_id]", rutActual);
-        form.AddField("estadisticas[tiempoCarril]", tiempoDentroCarril);
-        form.AddField("estadisticas[tiempoFueraCarril]", tiempoFueraCarril);
+		form.AddField("estadisticas[tiempoCarril]", tiempoDentroCarril.ToString ());
+		form.AddField("estadisticas[tiempoFueraCarril]", tiempoFueraCarril.ToString ());
 
         //Escritura Archivo
         StreamWriter file = new StreamWriter("Estadisticas/estadistica" + contadorEstadistica.ToString() + ".json");
