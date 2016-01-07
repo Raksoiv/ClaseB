@@ -245,7 +245,10 @@ public static class API {
             itemFueraCarril += collection.ToString() + ",";
             tiempoFueraCarril += collection;
         }
-        itemFueraCarril = itemFueraCarril.Substring(0, itemFueraCarril.Length - 1);
+		if (itemFueraCarril.Length > 1)
+			itemFueraCarril = itemFueraCarril.Substring (0, itemFueraCarril.Length - 1);
+		else
+			itemFueraCarril = "";
         tiempoDentroCarril = tiempoTotalJuego - tiempoFueraCarril;
 
         //LLenar Form HTML

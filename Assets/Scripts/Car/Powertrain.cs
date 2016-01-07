@@ -26,10 +26,13 @@ public class Powertrain : MonoBehaviour {
 
 
 	int currentGear = 0;
+	int lastGear = 0;
 	float throttle;
 	float brake;
 	float clutch;
 	float steering;
+
+	float engagedEngineRPM;
 
 	//static Rigidbody rigidbody;
 	static float engineRPM;
@@ -123,8 +126,10 @@ public class Powertrain : MonoBehaviour {
 		}
 
 		//Engaged Engine
-		float engagedEngineRPM;
 		engagedEngineRPM = wheelRPM * gearRatios[currentGear] * finalGearRatio;
+		if (gearRatios [currentGear] == 0) {
+			engagedEngineRPM = wheelRPM * gearRatios[lastGear] * finalGearRatio;
+		}
 		
 		//RPM del motor dependiendo del estado del embrague
 		engineRPM = disengagedEngineRPM * clutch + engagedEngineRPM * (1 - clutch);
@@ -183,31 +188,42 @@ public class Powertrain : MonoBehaviour {
 		if (currentGear < gearRatios.Length - 1)
 			currentGear++; 
 	}
+
 	public void ShiftDown(){
 		if (currentGear > 0)
 			currentGear--;
 	}
+
 	public bool ShiftTo(int targetGear){
 		if (clutch > 0.8) {
 			if (targetGear >= 0 && targetGear <= gearRatios.Length && currentGear != targetGear){
+				lastGear = currentGear;
 				currentGear = targetGear;
 				return true;
 			}
 		}
 		else if(currentGear != targetGear) {
+			lastGear = currentGear;
 			currentGear = 0;
 		}
 		return false;
 	}
+
 	public int GetCurrentGear(){
 		return currentGear;
 	}
+
 	static public int GetCurrentRPM(){
 		int rpm = new int();
 		rpm = (int)engineRPM;
 		return rpm;
 	}
+
 	public int GetCurrentSpeed(){
 		return Mathf.FloorToInt(this.GetComponent<Rigidbody>().velocity.magnitude * 3.6f);
+	}
+
+	public int GetCurrentEngagedRPM () {
+		return (int)engagedEngineRPM;
 	}
 }

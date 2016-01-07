@@ -25,7 +25,9 @@ public class EstadisticaCarril : MonoBehaviour {
 			timeOutside += Time.deltaTime;
 		} else {
 			if (timeOutside > 0) {
-				API.salidaCarril (timeOutside);
+				//API.salidaCarril (timeOutside);
+				//API v2
+				APIv2.RegisterOutsideLane (timeOutside);
 				offset = -1;
 				timeOutside = 0;
 			}

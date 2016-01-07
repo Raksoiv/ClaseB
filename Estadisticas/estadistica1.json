@@ -1,13 +1,13 @@
 {
-"velocidad":[0,0,9,24,32,33,33,31,30,31,29,0,0,0,0,0,0,0,0,0,0,0,0],
-"tiempoVelocidad":[23,28,33,38,43,48,53,58,63,68,73,78,83,88,93,98,103,108,113,118,123,128,133],
-"velocidadMedia":10,
-"velocidadMaxima":33,
+"velocidad":[0,0,1,31,51,49,12,4,16,0,0,0,11,27,32,34,0,3,0,2,0,0,0],
+"tiempoVelocidad":[13,18,23,28,33,38,43,48,53,58,63,68,73,78,83,88,93,98,103,108,113,118,123],
+"velocidadMedia":11,
+"velocidadMaxima":51,
 "velocidadMinima":0,
 "ruta": "",
-"cambiosVelocidad":[0,24,32,0,0,0],
-"cambiosRpm":[1000,1000,1000,1000,1000,1000],
+"cambiosVelocidad":[0,51,5,18,0,0,0,22,28,33,0,0,0,0,0],
+"cambiosRpm":[0,6495,320,2261,0,0,7,2768,1875,1404,0,0,0,0,0],
 "alumno_id":5,
-"tiempoCarril":120.042,
-"tiempoFueraCarril":17.95804
+"tiempoCarril":101.7326,
+"tiempoFueraCarril":26.26744
 }

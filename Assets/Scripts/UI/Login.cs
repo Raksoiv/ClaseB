@@ -22,7 +22,10 @@ public class Login : MonoBehaviour {
             int primera = retorno.IndexOf (',');
             string id = retorno.Substring (6, primera - 6);
 
-            Debug.Log(API.startSesion (id));
+            //Debug.Log(API.startSesion (id));
+			//API v2
+			APIv2.InitApi ();
+			APIv2.StartSession (id);
             // Application.LoadLevel("estadisticas");
 			secondPanel.SetActive (true);
 			firstPanel.SetActive (false);
