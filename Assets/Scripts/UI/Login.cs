@@ -18,14 +18,17 @@ public class Login : MonoBehaviour {
     public void ComprobarDatos () {
         string rut = input.GetComponent<Text> ().text;
         if (ComprobarRut (rut)) {
-            string retorno = API.requestHTTP ("http://claseb.dribyte.cl/api/v1/alumnos", "{\"rut\": \"" + rut + "\"}");
-            int primera = retorno.IndexOf (',');
-            string id = retorno.Substring (6, primera - 6);
+            //string retorno = API.requestHTTP ("http://claseb.dribyte.cl/api/v1/alumnos", "{\"rut\": \"" + rut + "\"}");
+            //Debug.Log(retorno);
+            //int primera = retorno.IndexOf (',');
+
+            //string id = retorno.Substring (6, primera - 6);
 
             //Debug.Log(API.startSesion (id));
 			//API v2
 			APIv2.InitApi ();
-			APIv2.StartSession (id);
+			//APIv2.StartSession (id);
+            APIv2.StartSession ("5");
             // Application.LoadLevel("estadisticas");
 			secondPanel.SetActive (true);
 			firstPanel.SetActive (false);
@@ -36,7 +39,7 @@ public class Login : MonoBehaviour {
     }
 
 	public void IniciarPractica () {
-		SceneManager.LoadScene ("estadisticas");
+		SceneManager.LoadScene ("Generacion");
 	}
 
 	public void Salir() {
