@@ -149,8 +149,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7833761aaa6ee8243a87e47403d0a31a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rectaPrefab: {fileID: 166548, guid: 7b0ebfde9bc9bb34292e59624141a97c, type: 2}
-  crucePrefab: {fileID: 138828, guid: 52ff9f5546578b147bf30dccb4abedaa, type: 2}
+  rectaPrefab:
+  - {fileID: 177606, guid: 2ce579df8b7def645bb3c5e4a8d5ecbd, type: 2}
+  - {fileID: 192976, guid: 0e73a7023a4e773408ece7ec5acaeea5, type: 2}
+  - {fileID: 101852, guid: 718695ad72bc58640b97a83cb45def74, type: 2}
+  - {fileID: 123524, guid: a79337fcecf26674c929f04bb7e4bb81, type: 2}
+  crucePrefab:
+  - {fileID: 146878, guid: 7ccb743afd2be5c41af962696d33f2b2, type: 2}
+  - {fileID: 165526, guid: e128b842d53fb534dbd27e26a7b57eb5, type: 2}
+  - {fileID: 122144, guid: f39a1a7e6edd6ed4bab54930a24b6c18, type: 2}
+  - {fileID: 168614, guid: c5e0edecfffa02f49a71ae48e748a356, type: 2}
   carPrefab: {fileID: 186252, guid: 53845fdf870903749a20bf2a77b63fe2, type: 2}
 --- !u!1 &376286575
 GameObject:
