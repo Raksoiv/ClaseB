@@ -56,6 +56,8 @@ public class CarControllerv2 : MonoBehaviour {
 		Debug.Log(LogitechGSDK.LogiSteeringInitialize(false));
 		IsCustomProperties = false;
 		IsOn = false;
+		UnityEngine.VR.VRSettings.enabled = true;
+		UnityEngine.VR.InputTracking.Recenter();
 	}
 	
 	// Update is called once per frame
@@ -74,9 +76,9 @@ public class CarControllerv2 : MonoBehaviour {
 				//Initialice the Custom Properties
 				//Commented due to crash Unity | Uncomment on Build
 				//LogitechGSDK.LogiGetCurrentControllerProperties(0, ref properties);
-        		//properties.wheelRange = 360;
+        	//	properties.wheelRange = 450;
         		//LogitechGSDK.LogiSetPreferredControllerProperties(properties);
-        		IsCustomProperties = true;
+        		//IsCustomProperties = true;
 			}
 
 			//Input from Logitech SDK
@@ -146,6 +148,8 @@ public class CarControllerv2 : MonoBehaviour {
 					lights.ActivateTurnRigth ();
 				} else if (LogitechGSDK.LogiButtonTriggered (0, 5)) {
 					lights.ActivateTurnLeft ();
+				} else if (LogitechGSDK.LogiButtonTriggered (0, 1)) {
+					UnityEngine.VR.InputTracking.Recenter();
 				}
 
 				UpdateLights ();

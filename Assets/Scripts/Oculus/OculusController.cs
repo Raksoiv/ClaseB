@@ -8,7 +8,7 @@ public class OculusController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		UnityEngine.VR.VRSettings.enabled = ActivateOculus;
-		UnityEngine.VR.InputTracking.Recenter();
+		//UnityEngine.VR.InputTracking.Recenter();
 	}
 	
 	// Update is called once per frame
