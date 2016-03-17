@@ -229,7 +229,6 @@ public class CarControllerv2 : MonoBehaviour {
 	}
 
 	void AudioStuff(){
-		int minRPM = powertrain.GetRPMS(0);
 		int maxRPM = powertrain.GetRPMS(2);
 		int curRPM = powertrain.GetRPMS(1);
 
@@ -237,7 +236,6 @@ public class CarControllerv2 : MonoBehaviour {
 			CarEngine.Play ();
 		else if (!(IsOn) && CarEngine.isPlaying)
 			CarEngine.Stop ();
-		Debug.Log ((float)curRPM / (float)maxRPM);
 		CarEngine.pitch = 0.1f + ((float)curRPM / (float)maxRPM) * 0.9f;
 	}
 }

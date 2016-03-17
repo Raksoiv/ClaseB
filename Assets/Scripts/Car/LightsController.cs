@@ -7,7 +7,13 @@ public class LightsController : MonoBehaviour {
 	public GameObject []HighLights;
 	public GameObject []BrakeLights;
 	public GameObject []TurnLights;
+
+	//luces panel
 	public GameObject PanelLight;
+	public MeshRenderer HighBeamLight;
+	public MeshRenderer LowBeamLight;
+	public MeshRenderer LeftBlinkerLight;
+	public MeshRenderer RightBlinkerLight;
 
 	//sonido
 	public AudioSource CarSignal;
@@ -100,6 +106,7 @@ public class LightsController : MonoBehaviour {
 			if (timeSpend > .5) {
 				bool state = TurnLightFrontLeft.enabled;
 				TurnLightFrontLeft.enabled = !state;
+				LeftBlinkerLight.enabled = !state;
 				state = TurnLightBackLeft.enabled;
 				TurnLightBackLeft.enabled = !state;
 				timeSpend = 0;
@@ -112,17 +119,25 @@ public class LightsController : MonoBehaviour {
 			if (timeSpend > .5) {
 				bool state = TurnLightFrontRight.enabled;
 				TurnLightFrontRight.enabled = !state;
+				RightBlinkerLight.enabled = !state;
 				state = TurnLightBackRight.enabled;
 				TurnLightBackRight.enabled = !state;
 				timeSpend = 0;
 			}
-		} 
-		else if (CarSignal.isPlaying && !(turnLeft || turnRight))
+		} else if (CarSignal.isPlaying && !(turnLeft || turnRight)) {
 			CarSignal.Stop ();
+			LeftBlinkerLight.enabled = false;
+			RightBlinkerLight.enabled = false;
+
+		}
+
 	}
 
 	public void WhiteLights(){
 		if (lightState == 0) {
+			HighBeamLight.enabled = false;
+			LowBeamLight.enabled = true;
+
 			LowLightFrontLeft.enabled = true;
 			LowLightFrontRight.enabled = true;
 			LowBrakeLightLeft.enabled = true;
@@ -133,6 +148,9 @@ public class LightsController : MonoBehaviour {
 			lightState = 1;
 		}
 		else if (lightState == 1){
+			HighBeamLight.enabled = true;
+			LowBeamLight.enabled = false;
+
 			LowLightFrontLeft.enabled = false;
 			LowLightFrontRight.enabled = false;
 			HighLightFrontLeft.enabled = true;
@@ -140,6 +158,8 @@ public class LightsController : MonoBehaviour {
 			lightState = 2;
 		}
 		else if (lightState == 2){
+			HighBeamLight.enabled = false;
+			LowBeamLight.enabled = false;
 			LowLightFrontLeft.enabled = false;
 			LowLightFrontRight.enabled = false;
 			HighLightFrontLeft.enabled = false;
