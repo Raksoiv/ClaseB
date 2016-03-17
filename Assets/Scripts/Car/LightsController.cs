@@ -9,6 +9,9 @@ public class LightsController : MonoBehaviour {
 	public GameObject []TurnLights;
 	public GameObject PanelLight;
 
+	//sonido
+	public AudioSource CarSignal;
+
 	//White Lights
 	private Light LowLightFrontRight;
 	private Light LowLightFrontLeft;
@@ -91,8 +94,10 @@ public class LightsController : MonoBehaviour {
 		timeSpend += Time.deltaTime;
 		
 		//TurnLeft
-		if(turnLeft){
-			if(timeSpend > .5){
+		if (turnLeft) {
+			if (!CarSignal.isPlaying)
+				CarSignal.Play ();
+			if (timeSpend > .5) {
 				bool state = TurnLightFrontLeft.enabled;
 				TurnLightFrontLeft.enabled = !state;
 				state = TurnLightBackLeft.enabled;
@@ -101,15 +106,19 @@ public class LightsController : MonoBehaviour {
 			}
 		}
 		//Turn Right
-		else if(turnRight){
-			if(timeSpend > .5){
+		else if (turnRight) {
+			if (!CarSignal.isPlaying)
+				CarSignal.Play ();
+			if (timeSpend > .5) {
 				bool state = TurnLightFrontRight.enabled;
 				TurnLightFrontRight.enabled = !state;
 				state = TurnLightBackRight.enabled;
 				TurnLightBackRight.enabled = !state;
 				timeSpend = 0;
 			}
-		}
+		} 
+		else if (CarSignal.isPlaying && !(turnLeft || turnRight))
+			CarSignal.Stop ();
 	}
 
 	public void WhiteLights(){

@@ -26,6 +26,11 @@ public class CarControllerv2 : MonoBehaviour {
 
 	private bool IsOn;
 
+	//sound stuff
+	public AudioSource CarEngine;
+	public AudioSource CarIgnition;
+
+
 	void UpdateSteeringWheelRotation(float steer){
 		//steeringWheel.transform.localRotation = Quaternion.Euler (0, 0, -Input.GetAxis ("Horizontal")*90);
 		//if (Input.GetKeyDown (KeyCode.F12))
@@ -87,7 +92,7 @@ public class CarControllerv2 : MonoBehaviour {
 
 			if (IsOn) {
 				//Get the steer
-				float steer = rec.lX / LIC;
+				float steer = (float)rec.lX / (float)LIC;
 				// Porcentaje de punto muerto = 5%
 				if (steer < .05f && steer > -.05f) {
 					steer = 0;
@@ -99,6 +104,8 @@ public class CarControllerv2 : MonoBehaviour {
 
 				
 				UpdateSteeringWheelRotation (steer);
+
+				Debug.Log (steer);
 
 				float finalAngle = steer * 45f;
 				
@@ -156,6 +163,8 @@ public class CarControllerv2 : MonoBehaviour {
 			}
 
 			if (LogitechGSDK.LogiButtonTriggered (0, 0)) {
+				if (!IsOn)
+					CarIgnition.Play ();
 				IsOn = !IsOn;
 			}
 
@@ -164,6 +173,8 @@ public class CarControllerv2 : MonoBehaviour {
 		if (timeToSendData > 5) {
 			timeToSendData = 0;
 		}
+
+		AudioStuff ();
 	}
 
 	void OnGUI() {
@@ -215,5 +226,18 @@ public class CarControllerv2 : MonoBehaviour {
 
 	public bool CarIsOn () {
 		return IsOn;
+	}
+
+	void AudioStuff(){
+		int minRPM = powertrain.GetRPMS(0);
+		int maxRPM = powertrain.GetRPMS(2);
+		int curRPM = powertrain.GetRPMS(1);
+
+		if (IsOn && !CarEngine.isPlaying)
+			CarEngine.Play ();
+		else if (!(IsOn) && CarEngine.isPlaying)
+			CarEngine.Stop ();
+		Debug.Log ((float)curRPM / (float)maxRPM);
+		CarEngine.pitch = 0.1f + ((float)curRPM / (float)maxRPM) * 0.9f;
 	}
 }
