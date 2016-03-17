@@ -15,6 +15,10 @@ public class Generacionv2 : MonoBehaviour {
 
 	/** Variables Privadas */
 
+	private GameObject[,] poolRecta;
+	private GameObject[,] poolCruce;
+	private int [,] index;
+
 	private Map mapObject;
 	private GameObject car;
 	private float size;
@@ -26,9 +30,31 @@ public class Generacionv2 : MonoBehaviour {
 	/** Funciones */
 
 	void Start() {
-		string mapa = requestHTTP("http://claseb.dribyte.cl/api/v1/mapa");
-		//string mapa = '{"segmentos":[{"type":"Recto","senales":[],"direccion":"Adelante"},{"type":"Cruce","senales":[],"direccion":"Izquierda"},{"type":"Recto","senales":[],"direccion":"Adelante"},{"type":"Recto","senales":[],"direccion":"Adelante"},{"type":"Cruce","senales":[],"direccion":"Izquierda"},{"type":"Recto","senales":[],"direccion":"Adelante"},{"type":"Recto","senales":["No Virar Izquierda"],"direccion":"Derecha"},{"type":"Cruce","senales":[],"direccion":"Adelante"},{"type":"Recto","senales":[],"direccion":"Adelante"},{"type":"Recto","senales":[],"direccion":"Adelante"}]}';
+		string mapa = requestHTTP("http://claseb.dribyte.cl/api/v1/mapa.json");
+		//string mapa = "{\"segmentos\":[{\"type\":\"Recto\",\"senales\":[],\"direccion\":\"Adelante\"},{\"type\":\"Cruce\",\"senales\":[],\"direccion\":\"Izquierda\"},{\"type\":\"Recto\",\"senales\":[],\"direccion\":\"Adelante\"},{\"type\":\"Recto\",\"senales\":[],\"direccion\":\"Adelante\"},{\"type\":\"Cruce\",\"senales\":[],\"direccion\":\"Izquierda\"},{\"type\":\"Recto\",\"senales\":[],\"direccion\":\"Adelante\"},{\"type\":\"Recto\",\"senales\":[\"No Virar Izquierda\"],\"direccion\":\"Derecha\"},{\"type\":\"Cruce\",\"senales\":[],\"direccion\":\"Adelante\"},{\"type\":\"Recto\",\"senales\":[],\"direccion\":\"Adelante\"},{\"type\":\"Recto\",\"senales\":[],\"direccion\":\"Adelante\"}]}";
 		mapObject = Map.CreateFromJson (mapa);
+
+		//Creando el pool de partes disponibles para el mapa
+		//Generando las pool
+		poolRecta = new GameObject [4, 10];
+		poolCruce = new GameObject [4, 5];
+		index = new int[2, 4];
+		//Rectas
+		for (int j = 0; j < 4; j++) {
+			for (int i = 0; i < 10; i++) {
+				poolRecta [j, i] = Instantiate (rectaPrefab [j], Vector3.zero, Quaternion.identity) as GameObject;
+				poolRecta [j, i].SetActive (false);
+			}
+			index [0, j] = 0;
+		}
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 5; j++) {
+				poolCruce [i, j] = Instantiate (crucePrefab [i], Vector3.zero, Quaternion.identity) as GameObject;
+				poolCruce [i, j].SetActive (false);
+			}
+			index [1, i] = 0;
+		}
 
 		size = 39;
 		xActual = yActual = 0;
@@ -93,21 +119,58 @@ public class Generacionv2 : MonoBehaviour {
 		//If Cruce Instaitate all posibilities
 		if (actualMapItem == "Cruce") {
 			if (actualDirection == "North") {
-				Instantiate(rectaPrefab[0], new Vector3 ((xActual + 1) * size, 0, yActual * size), Quaternion.identity);
-				Instantiate(rectaPrefab[1], new Vector3 (xActual * size, 0, (yActual + 1) * size), Quaternion.identity);
-				Instantiate(rectaPrefab[3], new Vector3 (xActual * size, 0, (yActual - 1) * size), Quaternion.identity);
+				
+				poolRecta [0, index [0, 0]].transform.localPosition = new Vector3 ((xActual + 1) * size, 0, yActual * size);
+				poolRecta [0, index [0, 0]].SetActive (true);
+				poolRecta [1, index [0, 1]].transform.localPosition = new Vector3 (xActual * size, 0, (yActual + 1) * size);
+				poolRecta [1, index [0, 1]].SetActive (true);
+				poolRecta [3, index [0, 3]].transform.localPosition = new Vector3 (xActual * size, 0, (yActual - 1) * size);
+				poolRecta [3, index [0, 3]].SetActive (true);
+				AumentIndex (0, 0);
+				AumentIndex (0, 1);
+				AumentIndex (0, 3);
+				//Instantiate(rectaPrefab[0], new Vector3 ((xActual + 1) * size, 0, yActual * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[1], new Vector3 (xActual * size, 0, (yActual + 1) * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[3], new Vector3 (xActual * size, 0, (yActual - 1) * size), Quaternion.identity);
 			} else if (actualDirection == "East") {
-				Instantiate(rectaPrefab[0], new Vector3 ((xActual + 1) * size, 0, yActual * size), Quaternion.identity);
-				Instantiate(rectaPrefab[1], new Vector3 (xActual * size, 0, (yActual + 1) * size), Quaternion.identity);
-				Instantiate(rectaPrefab[2], new Vector3 ((xActual - 1) * size, 0, yActual * size), Quaternion.identity);
+				poolRecta [0, index [0, 0]].transform.localPosition = new Vector3 ((xActual + 1) * size, 0, yActual * size);
+				poolRecta [0, index [0, 0]].SetActive (true);
+				poolRecta [1, index [0, 1]].transform.localPosition = new Vector3 (xActual * size, 0, (yActual + 1) * size);
+				poolRecta [1, index [0, 1]].SetActive (true);
+				poolRecta [2, index [0, 2]].transform.localPosition = new Vector3 ((xActual - 1) * size, 0, yActual * size);
+				poolRecta [2, index [0, 2]].SetActive (true);
+				AumentIndex (0, 0);
+				AumentIndex (0, 1);
+				AumentIndex (0, 2);
+				//Instantiate(rectaPrefab[0], new Vector3 ((xActual + 1) * size, 0, yActual * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[1], new Vector3 (xActual * size, 0, (yActual + 1) * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[2], new Vector3 ((xActual - 1) * size, 0, yActual * size), Quaternion.identity);
 			} else if (actualDirection == "South") {
-				Instantiate(rectaPrefab[1], new Vector3 (xActual * size, 0, (yActual + 1) * size), Quaternion.identity);
-				Instantiate(rectaPrefab[2], new Vector3 ((xActual - 1) * size, 0, yActual * size), Quaternion.identity);
-				Instantiate(rectaPrefab[3], new Vector3 (xActual * size, 0, (yActual - 1) * size), Quaternion.identity);
+				poolRecta [1, index [0, 1]].transform.localPosition = new Vector3 (xActual * size, 0, (yActual + 1) * size);
+				poolRecta [1, index [0, 1]].SetActive (true);
+				poolRecta [2, index [0, 2]].transform.localPosition = new Vector3 ((xActual - 1) * size, 0, yActual * size);
+				poolRecta [2, index [0, 2]].SetActive (true);
+				poolRecta [3, index [0, 3]].transform.localPosition = new Vector3 (xActual * size, 0, (yActual - 1) * size);
+				poolRecta [3, index [0, 3]].SetActive (true);
+				AumentIndex (0, 1);
+				AumentIndex (0, 2);
+				AumentIndex (0, 3);
+				//Instantiate(rectaPrefab[1], new Vector3 (xActual * size, 0, (yActual + 1) * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[2], new Vector3 ((xActual - 1) * size, 0, yActual * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[3], new Vector3 (xActual * size, 0, (yActual - 1) * size), Quaternion.identity);
 			} else if (actualDirection == "West") {
-				Instantiate(rectaPrefab[0], new Vector3 ((xActual + 1) * size, 0, yActual * size), Quaternion.identity);
-				Instantiate(rectaPrefab[2], new Vector3 ((xActual - 1) * size, 0, yActual * size), Quaternion.identity);
-				Instantiate(rectaPrefab[3], new Vector3 (xActual * size, 0, (yActual - 1) * size), Quaternion.identity);
+				poolRecta [0, index [0, 0]].transform.localPosition = new Vector3 ((xActual + 1) * size, 0, yActual * size);
+				poolRecta [0, index [0, 0]].SetActive (true);
+				poolRecta [2, index [0, 2]].transform.localPosition = new Vector3 ((xActual - 1) * size, 0, yActual * size);
+				poolRecta [2, index [0, 2]].SetActive (true);
+				poolRecta [3, index [0, 3]].transform.localPosition = new Vector3 (xActual * size, 0, (yActual - 1) * size);
+				poolRecta [3, index [0, 3]].SetActive (true);
+				AumentIndex (0, 0);
+				AumentIndex (0, 2);
+				AumentIndex (0, 3);
+				//Instantiate(rectaPrefab[0], new Vector3 ((xActual + 1) * size, 0, yActual * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[2], new Vector3 ((xActual - 1) * size, 0, yActual * size), Quaternion.identity);
+				//Instantiate(rectaPrefab[3], new Vector3 (xActual * size, 0, (yActual - 1) * size), Quaternion.identity);
 			}
 			actualMapItem = type;
 			return;
@@ -139,14 +202,35 @@ public class Generacionv2 : MonoBehaviour {
 		Debug.Log ("Instantiate position: " + x.ToString () + ", 0, " + y.ToString ());
 		Debug.Log ("Instantiate type: " + type.ToString ());
 		Debug.Log ("Instantiate typeNumber: " + typeNumber	.ToString ());
+		Debug.Log ("Instantiate index recta: " + index [0, typeNumber].ToString ());
 		if (type == "Recto") {
-			Instantiate (rectaPrefab[typeNumber], new Vector3 (x, 0, y), Quaternion.identity);
+			poolRecta [typeNumber, index [0, typeNumber]].transform.localPosition = new Vector3 (x, 0, y);
+			poolRecta [typeNumber, index [0, typeNumber]].SetActive (true);
+			AumentIndex (0, typeNumber);
+			//Instantiate (rectaPrefab[typeNumber], new Vector3 (x, 0, y), Quaternion.identity);
 		} else if (type == "Cruce") {
-			Instantiate (crucePrefab[typeNumber], new Vector3 (x, 0, y), Quaternion.identity);
+			poolCruce [typeNumber, index [1, typeNumber]].transform.localPosition = new Vector3 (x, 0, y);
+			poolCruce [typeNumber, index [1, typeNumber]].SetActive (true);
+			AumentIndex (1, typeNumber);
+			//Instantiate (crucePrefab[typeNumber], new Vector3 (x, 0, y), Quaternion.identity);
 		}
 
 		actualMapItem = type;
 		return;
+	}
+
+	void AumentIndex(int i, int j) {
+		if (i == 0) {
+			index [i, j] += 1;
+			if (index [i, j] >= 10) {
+				index [i, j] = 0;
+			}
+		} else if (i == 1) {
+			index [i, j] += 1;
+			if (index [i, j] >= 5) {
+				index [i, j] = 0;
+			}
+		}
 	}
 
 	string requestHTTP(string pagina) {
