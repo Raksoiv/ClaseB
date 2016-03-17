@@ -42,7 +42,12 @@ public class Login : MonoBehaviour {
 		SceneManager.LoadScene ("Generacion");
 	}
 
-	public void Salir() {
+    public void VolverMenu()
+    {
+        SceneManager.LoadScene("MenuPrincipal");
+    }
+
+    public void Salir() {
 		Application.Quit ();
 	}
 
